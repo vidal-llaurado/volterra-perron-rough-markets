@@ -17,7 +17,7 @@ keywords:
   - option-manifold pricing
   - Lean formalization
 abstract: >-
-  Final public source package for a sequence of papers on directed rough-volatility contagion,
+  Public source package for a sequence of papers on directed rough-volatility contagion,
   dynamic observability, source-screened inference, Perron synchronization, risk-neutral
   compression, residual pricing, listed-option relative value, and option-manifold recovery.
 references:
