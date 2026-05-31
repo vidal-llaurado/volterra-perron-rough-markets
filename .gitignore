@@ -19,15 +19,12 @@
 *.vrb
 *.xdv
 
-# Keep compiled PDFs, but ignore auxiliary files if latexmk writes there again.
 compiled/*
 !compiled/*.pdf
 
-# Lean/Lake build artifacts
 .lake/
 lake-packages/
 
-# Python and editor cache files
 __pycache__/
 *.pyc
 *.swp
