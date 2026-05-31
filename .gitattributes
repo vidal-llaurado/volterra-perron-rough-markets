@@ -1,0 +1,8 @@
+*.bib text eol=lf
+*.cff text eol=lf
+*.lean text eol=lf
+*.md text eol=lf
+*.tex text eol=lf
+*.txt text eol=lf
+*.pdf binary
+*.rtf binary

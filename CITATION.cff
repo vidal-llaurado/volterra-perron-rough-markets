@@ -1,0 +1,101 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite the repository and the relevant SSRN manuscript."
+title: "Volterra-Perron Rough Markets: Latent Contagion, Compression, and Option-Manifold Pricing"
+authors:
+  - family-names: "Vidal Llauradó"
+    given-names: "J."
+    orcid: "https://orcid.org/0009-0002-1918-5458"
+year: 2026
+date-released: "2026-05-31"
+license: "CC-BY-4.0"
+keywords:
+  - rough volatility
+  - latent contagion
+  - Volterra operators
+  - Perron synchronization
+  - risk-neutral compression
+  - option-manifold pricing
+  - Lean formalization
+abstract: >-
+  Final public source package for a sequence of papers on directed rough-volatility contagion,
+  dynamic observability, source-screened inference, Perron synchronization, risk-neutral
+  compression, residual pricing, listed-option relative value, and option-manifold recovery.
+references:
+  - type: generic
+    title: "Latent Volatility Contagion in Rough Volatility Models: Spectral Thresholds and Detectability"
+    authors:
+      - family-names: "Vidal Llauradó"
+        given-names: "J."
+    year: 2026
+    identifiers:
+      - type: doi
+        value: "10.2139/ssrn.6520718"
+  - type: generic
+    title: "Dynamic Observability of Latent Contagion: Sequential Revelation and Observable Screening"
+    authors:
+      - family-names: "Vidal Llauradó"
+        given-names: "J."
+    year: 2026
+    identifiers:
+      - type: doi
+        value: "10.2139/ssrn.6539199"
+  - type: generic
+    title: "Detecting Latent Volatility Contagion: A Projected Score Estimator for Rough Volatility Models"
+    authors:
+      - family-names: "Vidal Llauradó"
+        given-names: "J."
+    year: 2026
+    identifiers:
+      - type: doi
+        value: "10.2139/ssrn.6616118"
+  - type: generic
+    title: "A Rough Theory of Markets: Latent Contagion, Market Phases, and Market-Variance Risk"
+    authors:
+      - family-names: "Vidal Llauradó"
+        given-names: "J."
+    year: 2026
+    identifiers:
+      - type: doi
+        value: "10.2139/ssrn.6616121"
+  - type: generic
+    title: "Risk-Neutral Compression and the Geometry of Latent Market Stress"
+    authors:
+      - family-names: "Vidal Llauradó"
+        given-names: "J."
+    year: 2026
+    identifiers:
+      - type: doi
+        value: "10.2139/ssrn.6680938"
+  - type: generic
+    title: "Gaussian Seams for Risk-Neutral Compression: A Volterra Source-Family Companion"
+    authors:
+      - family-names: "Vidal Llauradó"
+        given-names: "J."
+    year: 2026
+  - type: generic
+    title: "Perron Stress Pricing under Public Compression: Residual Price Intervals, Synchronized Stress, and Visible Hedging"
+    authors:
+      - family-names: "Vidal Llauradó"
+        given-names: "J."
+    year: 2026
+    identifiers:
+      - type: doi
+        value: "10.2139/ssrn.6700598"
+  - type: generic
+    title: "Synchronized Stress Relative Value: Public-Neutral Option Books under Latent Stress Compression"
+    authors:
+      - family-names: "Vidal Llauradó"
+        given-names: "J."
+    year: 2026
+    identifiers:
+      - type: doi
+        value: "10.2139/ssrn.6731781"
+  - type: generic
+    title: "Volterra-Perron Pricing of the Option Manifold"
+    authors:
+      - family-names: "Vidal Llauradó"
+        given-names: "J."
+    year: 2026
+    identifiers:
+      - type: doi
+        value: "10.2139/ssrn.6744119"

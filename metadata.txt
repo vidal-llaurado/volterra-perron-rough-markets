@@ -1,0 +1,80 @@
+Paper 1
+Title: Latent Volatility Contagion in Rough Volatility Models
+Subtitle: Spectral Thresholds and Detectability
+JEL classifications: C02, C22, C58, G12, G13
+Keywords: rough volatility, latent volatility contagion, Gaussian Volterra models, option-price visibility, path-space detectability, Feldman-Hajek dichotomy, Hilbert-Schmidt operators
+Description: Short-maturity option prices and physical path laws need not observe the same directed rough-volatility channel. This paper separates the pricing projection from the path-law projection in a bivariate Gaussian Volterra model where asset Y has its own rough component and receives a directed contagion component from asset X. The pricing threshold H_XY = H_Y determines whether contagion enters the leading Bachelier skew. In the smoothing regime, the path-space threshold H_XY = H_Y + 1/4 determines whether the coupled and uncoupled Gaussian volatility laws are mutually singular or equivalent. The interval H_Y < H_XY <= H_Y + 1/4 is the latent contagion regime: the channel is absent from leading option asymptotics but remains detectable in the physical path law. Smooth non-degenerate modulation preserves the same threshold geometry through the singular-value order of the relative covariance operator.
+Short description: Separates option-skew visibility from path-law detectability for directed rough-volatility contagion, identifying the latent regime between the two Gaussian Volterra thresholds.
+DOI: https://doi.org/10.2139/ssrn.6520718
+
+Paper 2
+Title: Dynamic Observability of Latent Contagion
+Subtitle: Sequential Revelation and Observable Screening
+JEL classifications: C02, C22, C32, C58, G12, G17
+Keywords: rough volatility, latent volatility contagion, Gaussian Volterra models, dynamic observability, sequential revelation, short-horizon prediction, observable screening, fractional transfer operators
+Description: A latent Volterra contagion channel has no single observability level. This paper studies sequential information in the bivariate Gaussian Volterra setting and separates finite-resolution evidence, oracle short-horizon prediction, and prediction from observed Gaussian channels. The finite-resolution experiment recovers the path-detectability boundary H_XY = H_Y + 1/4 as the rate at which likelihood evidence accumulates. The oracle prediction problem has a different boundary, H_XY = H_Y: rougher contagion gives a leading prediction gain, while smoother contagion is dynamically latent at leading order. After conditioning on the target asset's own observed past, the oracle gain can be screened by the observable filtration. Dynamic observability is therefore the residual predictive object left after pricing visibility, path-space detectability, and feasible prediction have been separated.
+Short description: Separates finite-resolution evidence, oracle prediction, and observable-history prediction, showing how dynamic contagion can survive path tests while being screened in feasible forecasts.
+DOI: https://doi.org/10.2139/ssrn.6539199
+
+Paper 3
+Title: Detecting Latent Volatility Contagion
+Subtitle: A Projected Score Estimator for Rough Volatility Models
+JEL classifications: C12, C13, C22, C32, C58, G17
+Keywords: rough volatility, latent volatility contagion, projected covariance scores, source-screened inference, Gaussian Volterra models, high-frequency realized volatility, Oxford-Man realized library
+Description: The estimand in this paper is the source-screened component of the source-target covariance derivative after target-only movements have been projected out. A reduced local Gaussian block experiment turns that component into a projected covariance-score GMM statistic. The theory gives the projected information geometry, local Gaussian efficiency constants, a rough-regime rank condition, pilot-adaptive transfer under logarithmic roughness accuracy, and uniform minimax guarantees under the primitive Volterra reduction. Synthetic experiments check the implementation against closed-form information and noncentrality constants. In a balanced Oxford-Man realized-volatility panel of eight global equity indices, physical-measure roughness remains in the rough-volatility range, with SPX near H_P = 0.071. The full-sample directed map is dense, so the empirical output is screened intensity ranking and rolling stability rather than sparse edge recovery. Matched physical/risk-neutral classification remains a paired option-panel task.
+Short description: Constructs a projected covariance-score estimator for source-screened latent contagion; Oxford-Man evidence yields dense directed maps read through intensity and stability.
+DOI: https://doi.org/10.2139/ssrn.6616118
+
+Paper 4
+Title: A Rough Theory of Markets
+Subtitle: Latent Contagion, Market Phases, and Market-Variance Risk
+JEL classifications: C02, C32, C58, G01, G12, G13, G17
+Keywords: rough volatility, latent contagion, Gaussian Volterra markets, market phases, Perron synchronization, market-variance risk, visible pricing and hedging
+Description: Continuous microscopic volatility can generate market-level roughness, synchronized stress, jump-like coarse observations, and residual hedge risk. This paper derives that sequence in an N-asset Gaussian Volterra market with directed latent-contagion kernels and an aggregate market-volatility functional. Admissible off-diagonal channels are selected by the projected experiment: they must be source-screened visible, carry nonzero market loading, and admit a shrinking projected local normalization. In the high-frequency market array, this selects rough channels as the stable observable contagion phase while smooth directional contagion becomes locally degenerate. Dominant rough edges form a screened contagion operator, and crossing its Perron threshold aligns latent stress along a common mode. Threshold-triggered activation can converge to jump-like behavior for coarse observers even though primitive paths remain continuous. Pricing and hedging consequences appear as visible compressions of latent market-variance risk, with residual lower bounds when the synchronized mode retains conditional variance.
+Short description: Derives market roughness, Perron synchronization, jump-like coarse observations, and incomplete visible hedging from directed Gaussian Volterra contagion.
+DOI: https://doi.org/10.2139/ssrn.6616121
+
+Paper 5
+Title: Risk-Neutral Compression and the Geometry of Latent Market Stress
+Subtitle: None
+JEL classifications: C02, C58, G12, G13, G14, G17
+Keywords: risk-neutral compression, latent market stress, rough volatility, incomplete markets, option-surface geometry, state-price densities, market-variance risk, visible hedging
+Description: Public option surfaces can quote local surface coefficients without fixing the latent Perron loading that moves non-public claims. This paper formulates that boundary as risk-neutral compression. For a square-integrable claim or option-surface summary, the priced structural loading is its projection onto the latent Perron information field under the risk-neutral measure; a public information set observes only a conditional projection of that loading. The main theorem shows that public pricing summaries, option-surface transfers, signed physical/risk-neutral coefficient comparisons, nonlinear variance-compression gaps, and visible-hedging residuals all pass through the same projected object. Calibration of a surface and recovery of a latent loading are therefore separate operations, and public visibility becomes hedgeability only after projection onto the tradeable span. The SPX/NDX OptionMetrics study matched to Oxford-Man realized-volatility data estimates the finite public projection and finds option-surface diagnostics aligned with the rebuilt Perron stress direction.
+Short description: Formulates risk-neutral compression: public option surfaces observe conditional projections of latent Perron loadings, with SPX/NDX evidence from matched options and realized-volatility data.
+DOI: https://doi.org/10.2139/ssrn.6680938
+
+Gaussian Companion Note
+Title: Gaussian Seams for Risk-Neutral Compression
+Subtitle: A Volterra Source-Family Companion
+JEL classifications: C02, C22, C58, G12, G13
+Keywords: Gaussian Volterra models, risk-neutral compression, Volterra source families, scalar seams, Bachelier option transfer, singular-value asymptotics, latent market stress
+Description: Risk-neutral compression needs the Gaussian-Volterra source family only through a scalar seam. This companion note verifies that seam at the level of primitive Volterra kernels. It derives leading singular-value estimates, identifies the centered quadratic loading, repairs the scalar one-mode reduction through an anchored quadratic lift, and proves the common-channel Gaussian/Bachelier option-factor consequence used by the main compression paper. The temporal singular-value, visible-origin/lower-cell, and denominator local-flatness routes are recorded as alternative sufficient conditions for the same compatibility condition. The ledger remains technical: the entries certify one Gaussian reduction and carry no separate pricing or economic claim.
+Short description: Verifies the Gaussian-Volterra scalar seam behind risk-neutral compression, from primitive kernel estimates to the common-channel Bachelier option factor.
+DOI: None
+
+Paper 6
+Title: Perron Stress Pricing under Public Compression
+Subtitle: Residual Price Intervals, Synchronized Stress, and Visible Hedging
+JEL classifications: C02, C58, G12, G13, G17, G32
+Keywords: public compression, Perron stress, synchronized stress, option-surface spanning, residual risk, visible hedging, expected shortfall, incomplete markets
+Description: Public calibration can preserve every admitted option price while leaving latent Perron-stress claims inside a residual pricing fiber. This paper studies that fiber under a latent Perron stress sigma-field, a public sigma-field, and a tradeable public subspace. It separates three L2 objects: the latent Perron loading of a claim, its public conditional projection, and the projection of the claim onto the tradeable span. Public-equivalent pricing kernels preserve public option prices while moving unspanned latent-stress payoffs, generating residual price intervals, stress-charge selections, and optimal visible-hedge decompositions. The hedge residual splits into claim risk outside the Perron field, latent risk invisible to public information, and public risk not spanned by tradeable instruments. Equivalent physical measures transfer the same residual into P&L-bias bounds, hedge-risk floors, capital lower bounds, and convex-compression losses. The synchronized-stress layer separates index variance exposure from single-name carrier absorption. The observable layer supplies finite-span estimands, not an executable trading rule.
+Short description: Develops residual pricing, stress-charge selection, synchronized carrier absorption, and visible-hedge decomposition for Perron stress under public compression.
+DOI: https://doi.org/10.2139/ssrn.6700598
+
+Paper 7
+Title: Synchronized Stress Relative Value
+Subtitle: Public-Neutral Option Books under Latent Stress Compression
+JEL classifications: C02, C58, G11, G12, G13, G14, G17
+Keywords: synchronization risk, option relative value, public-neutral portfolios, Perron stress, variance dispersion, listed-option execution, lower-bound sizing, carrier absorption, incomplete markets, expected shortfall
+Description: Public option calibration can leave synchronized-stress exposure only partly spanned. This paper turns the remaining compression into a listed-option relative-value rule. The trading coordinate is the wedge between index-implied synchronization and an adapted realized-synchronization benchmark generated from the Volterra-Perron stress state. A positive wedge selects direction; capital enters only through lower-bound sizing. When index options embed more synchronized stress than admissible single-name variance carriers support, the selected book is short index convexity and long carrier-basket convexity under public-neutrality, liquidity, cost, and capital constraints. Five maps separate signal extraction, realized benchmarking, carrier selection, book formation, and sellability sizing; the stress-convexity hedge ratio is a conditional projection of index-stress P&L onto carrier-basket P&L. The 2001-2018 OptionMetrics/Oxford-Man ledger reports 1,496 sign-positive candidate books and 906 allocated rows over 805 active dates. At 1x bid-ask costs the balanced specification reports total execution P&L of 24.567 million, annualized Sharpe 3.958, expected-shortfall loss 23,683, and max drawdown 364,148.
+Short description: Builds a public-neutral listed-option rule that sells index synchronization convexity against carrier-basket convexity only after an adapted lower-bound sellability gate is positive.
+DOI: https://doi.org/10.2139/ssrn.6731781
+
+Paper 8
+Title: Volterra-Perron Pricing of the Option Manifold
+Subtitle: None
+JEL classifications: C02, C58, G12, G13, G14, G17
+Keywords: risk-neutral pricing, option manifolds, Volterra operators, Perron stress, public option surfaces, latent-state recovery, residual kernels, synchronization risk, incomplete markets, native Greeks
+Description: Public option surfaces can be calibrated without determining the latent risk-neutral coordinates that move non-public stress claims. This paper treats the option manifold as the public image of a latent Volterra-Perron stress state and formulates recovery as a quotient problem. The canonical state contains a directed Volterra contagion operator, a rough maturity-scaling state, a Perron spectral triple, and a synchronized stress coordinate; a residual-density selector is appended only after recovery. The main theorem identifies the public-observable quotient. A Volterra-Perron source state is locally recoverable, up to canonical gauges, exactly when its source quotient embeds into that public quotient, and stable recovery is governed by the quotient observability modulus. Without source-family restrictions, public-equivalent density families preserve the full public option manifold while moving latent-stress claims. Complete pricing and hedgeability require separate payoff-module and tradeable-span conditions. The paper derives martingale drift restrictions, phase-transition charges, native Greeks for recovered state coordinates, a synchronization relative-value identity, and a finite Bachelier-Volterra-Perron benchmark with explicit pricing and hedge residuals.
+Short description: Formulates option surfaces as the public quotient of a latent Volterra-Perron state, deriving recovery, residual-pricing, native-Greek, synchronization, and finite-benchmark results.
+DOI: https://doi.org/10.2139/ssrn.6744119

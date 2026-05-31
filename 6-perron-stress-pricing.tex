@@ -1,0 +1,4270 @@
+\documentclass[11pt,a4paper]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  pdftitle={Perron Stress Pricing under Public Compression: Residual Price Intervals, Synchronized Stress, and Visible Hedging},
+  pdfauthor={J. Vidal Llaurado},
+  pdfsubject={Perron stress pricing, synchronized stress, residual risk, visible hedging},
+  pdfkeywords={option surfaces, synchronized stress, incomplete markets, Perron stress, residual risk, visible hedging}
+}
+\usepackage{orcidlink}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage[margin=1in]{geometry}
+\raggedbottom
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\esssup}{ess\,sup}
+\DeclareMathOperator{\argmin}{arg\,min}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\dist}{dist}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cZ}{\mathcal{Z}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\dd}{\,d}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
+\newcommand{\ip}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\ES}{\operatorname{ES}}
+
+% Preload AMS symbol fonts so microtype expansion is configured before first page use.
+\AtBeginDocument{\begingroup\setbox0=\hbox{$\square\mathbb{R}$}\endgroup}
+
+\begin{document}
+
+\title[Perron Stress Pricing]{%
+Perron Stress Pricing under Public Compression\\[0.3em]
+{\small Residual Price Intervals, Synchronized Stress,\\[0.1em] and Visible Hedging}}
+\author[J.~Vidal Llaurad\'o]{J.~Vidal Llaurad\'o\,\orcidlink{0009-0002-1918-5458}}
+\thanks{DOI: \href{https://doi.org/10.2139/ssrn.6700598}{10.2139/ssrn.6700598}.}
+\email{vidal.llaurado@gmail.com}
+\subjclass[2020]{60G22, 91G20, 91G80, 62M15, 62P05}
+\keywords{public compression, Perron stress, synchronized stress, option-surface spanning, residual risk, visible hedging, expected shortfall, incomplete markets}
+\date{May 2026}
+
+\begin{abstract}
+Public option surfaces can fix every admitted public payoff price while leaving latent
+market-stress claims unpriced.  The missing object is the component of the priced Perron loading
+outside the public projection, beyond any additional surface coordinate.  The paper studies this
+residual pricing fiber under a latent Perron stress sigma-field \(\cK\), a public sigma-field
+\(\cH\subseteq\cK\), and a tradeable public subspace \(\cS\subseteq L^2(\QQ,\cH)\).  For a
+square-integrable claim \(X\), the priced latent loading is \(L_X^\QQ=C_{\cK}^{\QQ}(X)\).  Public
+calibration fixes \(C_{\cH}^{\QQ}(L_X^\QQ)\).  Visible hedging is a separate projection of \(X\)
+onto \(\cS\).
+
+Public-equivalent pricing kernels preserve all public option prices and still move latent-stress
+claims along the public-annihilator fiber.  This yields scalar and finite-dimensional residual price
+intervals, stress-charge selections, and the optimal visible-hedge decomposition.  The hedge
+residual splits into the claim component outside the Perron stress field, the latent component not
+measurable with respect to public information, and the public component not spanned by tradeable
+instruments.  Equivalent physical measures transfer the same residual into P\&L-bias bounds and
+capital lower bounds.  Strongly convex stress claims add a quadratic compression loss.  A
+synchronized-stress component separates index-level variance exposure from the single-name carrier
+span: carrier enrichment can shrink residual price intervals, while tradeable carrier absorption
+remains a stronger condition than statistical spanning.
+
+The observable layer contains estimands, not sample estimates.  The finite objects are public
+projection shares, carrier-enrichment increments, residual hedge-risk floors, and the
+implied-versus-realized synchronization wedge.  They specify what a data or listed-option
+implementation can measure.  Contract-level execution remains outside the pricing geometry.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+An option surface is a calibration object before it is a spanning object.  It fixes admitted public
+risk-neutral coordinates.  It need not span the latent market-stress loading that enters a claim.
+A maturity slice, a local skew coefficient, or an index variance summary can be public and still
+leave a Perron market-variance component outside the tradeable public span.  Synchronized stress is
+the sharp case: liquid index variance does not imply completeness of the single-name carrier span
+needed to absorb the synchronized component.  The paper prices the residual left by this public
+compression.
+
+The risk-neutral compression geometry of \cite{vidal2026compression} supplies the baseline.  For a
+square-integrable claim \(X\), the priced latent loading is
+\[
+        L_X^\QQ=C_{\cK}^{\QQ}(X),
+\]
+where \(\cK\) is the latent Perron stress information field.  Public option information
+\(\cH\subseteq\cK\) fixes
+\[
+        C_{\cH}^{\QQ}(L_X^\QQ),
+\]
+not necessarily \(L_X^\QQ\).  Visible hedging is governed by another map, the projection of
+\(X\), or of \(L_X^\QQ\), onto a closed span \(\cS\) of tradeable public instruments.  The three
+objects remain separate:
+\[
+        L_X^\QQ,
+        \qquad
+        C_{\cH}^{\QQ}(L_X^\QQ),
+        \qquad
+        C_{\cS}^{\QQ}(X).
+\]
+The first is latent loading.  The second is public calibration.  The third is visible hedging.
+
+Public compression therefore creates a pricing fiber.  Public option surfaces define equivalent
+pricing kernels that agree on public claims.  Latent-stress claims can move inside that class when
+their residual loading is not spanned by public information.  The corresponding object is a
+compression-consistent price interval.  A point quote requires a separate selector: a stress
+premium, a state-price-density convention, or a capital charge.  For synchronized-stress claims the
+same geometry separates the index public surface from the single-name carrier surfaces entering the
+index-versus-name variance decomposition.  Carrier enrichment can reduce the residual interval.  It
+becomes a stable hedge only after an additional tradeable-admissibility condition.
+
+The hedge problem changes the space.  If \(\cS\) is the closed \(L^2(\QQ)\)-span of tradeable
+public instruments, the optimal visible hedge is the Hilbert projection \(C_{\cS}^{\QQ}X\).  Its
+residual decomposes into a claim component outside the latent stress field, a latent Perron
+residual not visible in public information, and a public component not spanned by tradeable
+instruments.  If the Perron component retains variance outside \(\cS\), no visible hedge removes
+it.  Under an equivalent physical measure \(\PP\), bounded density ratios transfer the
+\(\QQ\)-residual floor into physical hedge-risk bounds and compression-adjusted capital formulas.
+
+The observable layer follows this projection order.  A finite public shadow is obtained by
+projecting a fixed stress coordinate onto public option features.  An index-only public span is
+compared with a carrier-enriched span.  Residual hedge-risk floors are measured in the visible
+span.  An implied-versus-realized synchronization wedge is formed from index and single-name
+total-variance coordinates.  These are estimands of the theory, not latent-state recovery claims.
+
+The latent-contagion, dynamic-observability, projected-score, market-scale, and risk-neutral
+compression constructions
+\cite{vidal2026latent,vidal2026dynamic,vidal2026econometric,vidal2026market,
+vidal2026compression} isolate and verify the latent stress geometry.  This paper uses that geometry
+to build price intervals, visible hedge decompositions, and finite observable estimands for the
+stress risk left outside calibrated option surfaces.  A listed-option implementation starts at a
+different level.  It treats the residual synchronized-stress wedge as a tradeable object and adds
+execution, liquidity, carrier absorption, and adaptedness constraints.  The Hilbert geometry remains
+a pricing and hedging theory.
+
+\subsection*{Relation to existing literature}
+
+Option-spanning theory gives the reference boundary.  Classical option-pricing results show how
+derivative prices can complete or enlarge market contingencies
+\cite{blackScholes1973,merton1973,ross1976,bakshiMadan2000}.  The present paper starts from the
+opposite case.  The traded and observed option system leaves the latent stress claim outside its span.  The pricing
+object is therefore the residual family of pricing kernels that preserve public option prices while
+changing latent-stress payoffs, rather than a fully specified parametric surface.
+
+Empirical option-pricing work already separates surface fit from hedging and option-return
+performance.  Deterministic implied-volatility functions can fit cross-sectional prices while
+performing poorly in hedging tests \cite{dumasFlemingWhaley1998}; stochastic-volatility and jump
+models improve some pricing dimensions while leaving hedgeability as a separate property
+\cite{bakshiCaoChen1997,pan2002}.  Spanning tests based on option panels find priced smile factors
+beyond deterministic volatility functions \cite{buraschiJackwerth2001}.  The Hilbert formulation
+used here is the projection version of that boundary.  Calibration fixes the public projection.
+Hedge error is governed by the component outside the visible span.
+
+Option P\&L and variance-risk-premium evidence supply the pricing pressure.  Negative
+delta-hedged option gains, expected option-return patterns, and variance-risk premia show that
+volatility and tail risks are priced in ways not captured by static surface fit
+\cite{covalShumway2001,bakshiKapadia2003,jones2006,carrWu2009,
+bollerslevTauchenZhou2009}.  Andersen, Fusari, and Todorov
+\cite{andersenFusariTodorov2015} document a persistent wedge between market risks and their
+compensation in index options.  Under public compression, that wedge is the separation between the
+visible part of stress and the residual that appears in upper-tail hedge losses and
+variance-pricing errors.
+
+Implied-volatility surface dynamics and multifactor smirk models provide the finite public
+coordinates \cite{contDaFonseca2002,christoffersenHestonJacobs2009}.  These coordinates are used as
+public benchmarks, not as full latent states.  The object priced below is the component of a latent
+Perron stress state spanned by such public coordinates, together with the residual risk that
+remains.
+
+Unspanned stochastic volatility in fixed-income and commodity markets
+\cite{collinDufresneGoldstein2002,trolleSchwartz2009} and incomplete-market pricing bounds such as
+good-deal restrictions \cite{cochraneSaaRequejo2000} supply the incomplete-market language.  The
+unspanned coordinate here is a Perron stress variable generated by rough Volterra contagion.  The
+rough-volatility literature gives the temporal scale for such latent volatility states
+\cite{bayerFrizGatheral2016,gatheralJaissonRosenbaum2018}.  The latent-contagion and compression
+papers derive the detectability thresholds, observable screening, projected-score construction,
+aggregate market Perron state, and risk-neutral compression map
+\cite{vidal2026latent,vidal2026dynamic,vidal2026econometric,vidal2026market,
+vidal2026compression}.  This paper takes that Perron object as given and studies its pricing,
+hedging, and capital consequences under finite public option information.
+
+The no-arbitrage background is the martingale-measure tradition
+\cite{harrisonKreps1979,harrisonPliska1981,delbaen1994,karatzasShreve1998}.  The hedge projections
+used below belong to the Hilbert-space family of quadratic hedging and local-risk minimization
+\cite{follmerSondermann1986,follmerSchweizer1991,schweizer1992meanVariance,schweizer1995minimal}.
+
+\subsection*{Main statements}
+
+Section~\ref{sec:setup} fixes the Hilbert-space setting.  The public option system is a
+sigma-field \(\cH\), latent Perron stress information is a sigma-field \(\cK\), and visible trading
+instruments form a closed subspace \(\cS\subseteq L^2(\QQ,\cH)\).  Conditional expectation under a
+measure \(\mu\) is denoted by \(C_{\cA}^{\mu}\).
+
+Section~\ref{sec:pricing-kernels} identifies the compression-consistent pricing kernels.  A
+measure \(\QQ'\sim\QQ\) is public-equivalent to \(\QQ\) exactly when its density
+\(Z=\dd\QQ'/\dd\QQ\) satisfies
+\[
+        \EE_\QQ[Z\mid \cH]=1.
+\]
+Then all \(\cH\)-measurable public payoffs have the same price under \(\QQ'\) and \(\QQ\).
+Theorem~\ref{thm:kernel-tilt} constructs nontrivial local kernels by bounded latent residual
+tilts, while Theorem~\ref{thm:conditional-exponential-kernel} gives the positive conditional
+exponential construction used for unbounded Gaussian residual factors.  Theorem
+\ref{thm:public-annihilator} gives the exact annihilator statement for public identification, and
+Theorem~\ref{thm:identification} applies it to compression-consistent pricing kernels.
+
+Section~\ref{sec:pricing-model} characterizes the Perron stress pricing model.  The price interval
+generated by the public-equivalent kernel family is explicit for bounded residual tilts
+(Theorem~\ref{thm:price-interval}), and Theorem~\ref{thm:pricing-decomposition} writes each tilted
+price as a public price plus a latent residual term.  When the residual direction is a Perron
+stress coordinate, Theorem~\ref{thm:perron-price-interval} gives the interval width in terms of the
+canonical Perron exposure coefficient and the unspanned public residual variance.  Theorem
+\ref{thm:nested-residual-budget-intervals} separates calibration-only surface intervals from
+dynamic-safe public-terminal intervals.  Theorem~\ref{thm:residual-budget-interval} gives the
+model-wide support-function interval over bounded latent residual budgets, and
+Theorem~\ref{thm:robust-residual-interval} gives the corresponding finite-dimensional ellipsoidal
+interval.  A selected compression price is obtained by adding a stress charge to the public price
+(Proposition~\ref{prop:stress-charge}), and Theorem~\ref{thm:stress-charge-as-envelope} identifies
+the envelope case in which that charge is a linear public-equivalent endpoint.
+
+Section~\ref{sec:sync-carrier} specializes the residual-pricing geometry to synchronized-stress
+claims.  It defines index-versus-single-name synchronization loadings, separates index public spans
+from carrier-enriched public spans, and proves that carrier enrichment weakly shrinks the residual
+price interval.  Tradeable carrier absorption remains a separate hedgeability condition.
+
+Section~\ref{sec:hedging} proves the visible-hedging results.  The optimal visible hedge is
+\(C_{\cS}^{\QQ}X\).  If \(L_X^\QQ=C_{\cK}^{\QQ}X\), then
+\[
+        \norm{X-C_{\cS}^{\QQ}X}_{2,\QQ}^2
+        =
+        \norm{X-L_X^\QQ}_{2,\QQ}^2
+        +
+        \norm{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}_{2,\QQ}^2
+        +
+        \norm{C_{\cH}^{\QQ}L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ}_{2,\QQ}^2.
+\]
+The identity is Theorem~\ref{thm:three-part-hedge}.  Theorem~\ref{thm:minimax-visible-hedge}
+characterizes the minimax visible hedge under residual-kernel uncertainty, and
+Theorem~\ref{thm:perron-lower-bound} gives a Perron coordinate lower bound whenever a latent stress
+factor has a nonzero residual outside the tradeable public span.
+
+Section~\ref{sec:risk} transfers hedge residuals to the physical measure and defines
+compression-adjusted risk capital.  It also bounds the physical drift of a \(\QQ\)-orthogonal hedge
+residual and gives explicit capital lower bounds.  Section~\ref{sec:convex} gives a convexity
+inequality showing that public compression understates strongly convex stress losses by at least a
+quadratic residual term.  Section~\ref{sec:observable} records the finite public-projection,
+carrier-enrichment, residual-risk, and synchronization-wedge estimands generated by the theory.
+
+\section{Setup}\label{sec:setup}
+
+\subsection{Information fields and projections}
+
+Let \((\Omega,\cF,\QQ)\) be a probability space.  All random variables are identified up to
+\(\QQ\)-null sets unless a second measure is explicitly named.  Let
+\[
+        \cH\subseteq \cG\subseteq \cK\subseteq \cF
+\]
+be sub-sigma-fields.  The fields carry the following roles.
+
+\begin{itemize}[leftmargin=2em]
+\item \(\cH\) is the public option and visible-market information used for calibration;
+\item \(\cG\) is the larger public terminal market information, when needed;
+\item \(\cK\) is the latent Perron stress information field;
+\item \(\cF\) is the full terminal information field of the claim.
+\end{itemize}
+
+In the market-scale construction of \cite{vidal2026market,vidal2026compression},
+\(\cK\) is specialized to the one-factor Perron stress field
+\[
+        \cK\equiv \cH_\varpi
+        :=
+        \cG_T\vee\sigma(\varpi(t):0\le t\le T),
+        \qquad
+        \varpi(t)=u^\top x(t),
+\]
+where \(u\) is the Perron direction of the screened contagion operator and \(x\) is the latent
+Volterra envelope.  This is the scalar Perron specialization of a broader latent stress field.
+The field is fixed throughout the analysis.  Pricing, hedging, and capital are studied after public
+option information has been compressed to \(\cH\).
+
+For a sub-sigma-field \(\cA\subseteq\cF\), let
+\[
+        C_{\cA}^{\QQ}(X):=\EE_\QQ[X\mid \cA],
+        \qquad X\in L^2(\QQ).
+\]
+The operator is the orthogonal projection from \(L^2(\QQ,\cF)\) onto
+\(L^2(\QQ,\cA)\).  If \(\cS\) is a closed linear subspace of \(L^2(\QQ)\),
+\(C_{\cS}^{\QQ}\) denotes the orthogonal projection onto \(\cS\).
+
+\begin{definition}[Latent loading, public shadow, and visible hedge]\label{def:loading-shadow-hedge}
+For \(X\in L^2(\QQ)\), define
+\[
+        L_X^\QQ:=C_{\cK}^{\QQ}(X),
+        \qquad
+        X_{\cH}^{\QQ}:=C_{\cH}^{\QQ}(L_X^\QQ),
+        \qquad
+        X_{\cS}^{\QQ}:=C_{\cS}^{\QQ}(X).
+\]
+The random variable \(L_X^\QQ\) is the priced latent loading, \(X_{\cH}^{\QQ}\) is its public
+calibration shadow, and \(X_{\cS}^{\QQ}\) is the best visible \(L^2(\QQ)\)-hedge in the closed
+tradeable span \(\cS\).
+\end{definition}
+
+\begin{assumption}[Visible tradeable span]\label{ass:visible-span}
+The visible tradeable span \(\cS\) is a closed linear subspace of \(L^2(\QQ,\cH)\) containing the
+constants.  Its elements are terminal gains from admissible public instruments after discounting
+and static normalization.
+\end{assumption}
+
+\begin{remark}
+The closed subspace is the Hilbert-space abstraction underlying mean-variance hedging and
+local-risk-minimization arguments
+\cite{follmerSondermann1986,follmerSchweizer1991,schweizer1992meanVariance}.  A finite
+implementation may take \(\cS\) to be the span of index returns, synthetic variance swaps,
+maturity-sliced option portfolios, or option-surface factor portfolios.
+\end{remark}
+
+\subsection{Public option systems}
+
+The construction is static at a fixed date and may be applied date by date in a panel.  At a fixed
+date, public option information is summarized by \(\cH\)-measurable quantities
+\[
+        Y_1,\ldots,Y_m\in L^\infty(\QQ,\cH),
+        \qquad
+        p_i=\EE_\QQ[Y_i].
+\]
+The \(Y_i\) are payoff or feature coordinates, while \(p_i\) are their observed discounted public
+prices at the calibration date.  In a date-indexed panel, the observed price or feature coordinate is
+written \(q_{d,\tau}^{(f)}\), such as implied-volatility level, total-variance level, or downside
+total-variance skew.
+
+\begin{definition}[Public calibration agreement]\label{def:public-calibration}
+Two probability measures \(\QQ'\sim\QQ\) agree on the public calibration system
+\(\cP_{\cH}\subset L^1(\QQ,\cH)\) if
+\[
+        \EE_{\QQ'}[Y]=\EE_\QQ[Y],
+        \qquad
+        Y\in\cP_{\cH}.
+\]
+They agree on all public payoffs if this holds for every bounded \(\cH\)-measurable \(Y\).
+\end{definition}
+
+Agreement on all bounded public payoffs is the mathematical primitive.  A finite observed option
+system is its finite-dimensional restriction.
+
+Conditional density normalization is the kernel condition for public calibration agreement.
+
+\begin{proposition}[Exact public-equivalence condition]\label{prop:exact-public-equivalence}
+Let \(Z\ge0\) satisfy \(\EE_\QQ[Z]=1\), and define
+\(\dd\QQ^Z=Z\,\dd\QQ\).  The following are equivalent:
+\[
+        \EE_{\QQ^Z}[Y]=\EE_\QQ[Y]
+        \quad\text{for every bounded }\cH\text{-measurable }Y,
+\]
+and
+\[
+        \EE_\QQ[Z\mid\cH]=1.
+\]
+If \(Z>0\) \(\QQ\)-a.s., then \(\QQ^Z\sim\QQ\), giving the class of public-equivalent pricing
+kernels relative to \(\cH\).
+\end{proposition}
+
+\begin{proof}
+If \(\EE_\QQ[Z\mid\cH]=1\), then for every bounded \(\cH\)-measurable \(Y\),
+\[
+        \EE_{\QQ^Z}[Y]
+        =
+        \EE_\QQ[ZY]
+        =
+        \EE_\QQ[\EE_\QQ[Z\mid\cH]Y]
+        =
+        \EE_\QQ[Y].
+\]
+Conversely, if the equality of expectations holds for every bounded \(\cH\)-measurable \(Y\), then
+\[
+        \EE_\QQ[(Z-1)Y]=0
+        \quad\text{for every bounded }\cH\text{-measurable }Y.
+\]
+That identity is the defining property of \(\EE_\QQ[Z-1\mid\cH]=0\), and therefore
+\(\EE_\QQ[Z\mid\cH]=1\).
+\end{proof}
+
+The calibration condition above is a reduced Hilbert-feature formulation.  It applies after the
+public option surface has been represented by \(\cH\)-measurable quoted coordinates.  For terminal
+admitted option payoffs \(X_a\), date-\(t\) price preservation is stronger.  A density tilt
+\(Z\) must satisfy
+\[
+        \EE_\QQ[ZX_a\mid \cH_t]
+        =
+        \EE_\QQ[X_a\mid \cH_t]
+\]
+for every admitted payoff.  The distinction separates feature-level public calibration from
+payoff-module preservation.
+
+\begin{definition}[Public residual directions]\label{def:public-residual-directions}
+The \(L^2\) and bounded public residual directions are
+\[
+        \cR_{\cH}^{2}
+        :=
+        \{R\in L^2(\QQ):\EE_\QQ[R\mid\cH]=0\},
+        \qquad
+        \cR_{\cH}^{\infty}
+        :=
+        \cR_{\cH}^{2}\cap L^\infty(\QQ).
+\]
+To keep the annihilator notation uniform, write
+\[
+        \cN_{\cH}^{\infty}
+        :=
+        \cR_{\cH}^{\infty}.
+\]
+If \(\cP_m\subset L^2(\QQ)\) is a finite-dimensional public payoff space containing constants, its
+residual directions are
+\[
+        \cR_m^2
+        :=
+        \{R\in L^2(\QQ):\EE_\QQ[RY]=0\text{ for every }Y\in\cP_m\},
+        \qquad
+        \cR_m^\infty:=\cR_m^2\cap L^\infty(\QQ),
+\]
+and
+\[
+        \cN_m^{\infty}
+        :=
+        \cR_m^\infty.
+\]
+\end{definition}
+
+The public residual is the annihilator of the public payoff quotient.
+
+\begin{theorem}[Exact public residual duality]\label{thm:public-annihilator}
+For \(X\in L^2(\QQ)\), set
+\[
+        \Delta_{\cH}X:=X-C_{\cH}^{\QQ}X.
+\]
+Then
+\[
+        \norm{\Delta_{\cH}X}_{2,\QQ}
+        =
+        \sup\left\{
+        \EE_\QQ[XR]:
+        R\in\cR_{\cH}^{2},\ \norm{R}_{2,\QQ}\le1
+        \right\}.
+\]
+The same value is obtained if the supremum is restricted to bounded residual directions
+\[
+        R\in\cR_{\cH}^{\infty},
+        \qquad
+        \norm{R}_{2,\QQ}\le1.
+\]
+Consequently, the following are equivalent:
+\[
+        X=C_{\cH}^{\QQ}X
+        \quad\text{in }L^2(\QQ),
+\]
+and
+\[
+        \EE_\QQ[XR]=0
+        \quad\text{for every }R\in\cR_{\cH}^{\infty}.
+\]
+More generally,
+\[
+        \EE_\QQ[XR]=\EE_\QQ[(\Delta_{\cH}X)R],
+        \qquad R\in\cR_{\cH}^{2}.
+\]
+\end{theorem}
+
+\begin{proof}
+For \(R\in\cR_{\cH}^{2}\),
+\[
+        \EE_\QQ[(C_{\cH}^{\QQ}X)R]
+        =
+        \EE_\QQ[(C_{\cH}^{\QQ}X)\EE_\QQ[R\mid\cH]]
+        =
+        0.
+\]
+Thus \(\EE_\QQ[XR]=\EE_\QQ[(\Delta_{\cH}X)R]\).  By Cauchy--Schwarz,
+\[
+        \EE_\QQ[XR]
+        \le
+        |\EE_\QQ[(\Delta_{\cH}X)R]|
+        \le
+        \norm{\Delta_{\cH}X}_{2,\QQ}\norm{R}_{2,\QQ},
+\]
+so the supremum over \(L^2\)-residual directions is at most
+\(\norm{\Delta_{\cH}X}_{2,\QQ}\).  If \(\Delta_{\cH}X\ne0\), the choice
+\[
+        R^\star=\frac{\Delta_{\cH}X}{\norm{\Delta_{\cH}X}_{2,\QQ}}
+\]
+belongs to \(\cR_{\cH}^{2}\), has unit \(L^2\)-norm, and attains the upper bound.  If
+\(\Delta_{\cH}X=0\), both sides are zero.
+
+Bounded residual directions must give the same support value.  Let
+\(\Delta=\Delta_{\cH}X\), and suppose \(\Delta\ne0\).  For \(n\ge1\), let
+\[
+        T_n:=(-n)\vee(\Delta\wedge n),
+        \qquad
+        R_n:=T_n-\EE_\QQ[T_n\mid\cH].
+\]
+Then \(R_n\in L^\infty(\QQ)\) and \(\EE_\QQ[R_n\mid\cH]=0\), so
+\(R_n\in\cR_{\cH}^{\infty}\).  Since \(T_n\to\Delta\) in \(L^2(\QQ)\) and conditional expectation
+is an \(L^2\)-contraction,
+\[
+        \EE_\QQ[T_n\mid\cH]\to \EE_\QQ[\Delta\mid\cH]=0
+        \quad\text{in }L^2(\QQ).
+\]
+Thus \(R_n\to\Delta\) in \(L^2(\QQ)\), and
+\(\norm{R_n}_{2,\QQ}\to\norm{\Delta}_{2,\QQ}\).  For all large \(n\), \(R_n\ne0\).  With
+\(\widetilde R_n=R_n/\norm{R_n}_{2,\QQ}\),
+\[
+        \EE_\QQ[X\widetilde R_n]
+        =
+        \frac{\EE_\QQ[\Delta R_n]}{\norm{R_n}_{2,\QQ}}
+        \longrightarrow
+        \norm{\Delta}_{2,\QQ}.
+ \]
+This proves equality for bounded residual directions.  The annihilator equivalence follows by
+applying the norm identity.
+\end{proof}
+
+Finite calibration replaces the sigma-field quotient by a payoff-span quotient.
+
+\begin{corollary}[Finite-coordinate residual duality]\label{cor:finite-coordinate-duality}
+Let \(\cP_m\subset L^2(\QQ)\) be finite dimensional and contain constants, and let \(C_m^\QQ\) be
+the \(L^2(\QQ)\)-projection onto \(\cP_m\).  For every \(X\in L^2(\QQ)\),
+\[
+        \norm{X-C_m^\QQ X}_{2,\QQ}
+        =
+        \sup\left\{
+        \EE_\QQ[XR]:
+        R\in\cR_m^2,\ \norm{R}_{2,\QQ}\le1
+        \right\}.
+\]
+If \(\cP_m\) is spanned by bounded payoffs, the same value is obtained with
+\(R\in\cR_m^\infty\).
+\end{corollary}
+
+\begin{proof}
+For \(R\in\cR_m^2\), the projection \(C_m^\QQ X\) belongs to \(\cP_m\), and therefore
+\[
+        \EE_\QQ[(C_m^\QQ X)R]=0.
+\]
+Thus
+\[
+        \EE_\QQ[XR]=\EE_\QQ[(X-C_m^\QQ X)R].
+\]
+Cauchy--Schwarz gives the upper bound by
+\(\norm{X-C_m^\QQ X}_{2,\QQ}\).  If \(X-C_m^\QQ X\ne0\), the normalized residual
+\[
+        R^\star=
+        \frac{X-C_m^\QQ X}{\norm{X-C_m^\QQ X}_{2,\QQ}}
+\]
+belongs to \(\cR_m^2\) and attains that bound.  If \(X=C_m^\QQ X\), both sides are zero.
+
+Assume now that \(\cP_m\) is spanned by bounded payoffs.  Put
+\(\Delta=X-C_m^\QQ X\).  If \(\Delta\ne0\), define
+\[
+        T_n=(-n)\vee(\Delta\wedge n),
+        \qquad
+        R_n=T_n-C_m^\QQ T_n.
+\]
+The finite-dimensional projection \(C_m^\QQ T_n\) is a finite linear combination of bounded basis
+payoffs, hence \(R_n\in L^\infty(\QQ)\).  Also \(R_n\perp\cP_m\), so \(R_n\in\cR_m^\infty\).
+Since \(T_n\to\Delta\) in \(L^2(\QQ)\) and \(C_m^\QQ\Delta=0\), one has
+\(R_n\to\Delta\) in \(L^2(\QQ)\).  Normalizing the nonzero \(R_n\) and passing to the limit gives
+the same supremum over \(\cR_m^\infty\).
+\end{proof}
+
+Nested fields separate the surface residual from the terminal-public residual.
+
+\begin{theorem}[Nested surface and public-terminal residuals]\label{thm:nested-residuals}
+Let \(\cH\subseteq\cG\subseteq\cK\), let \(X\in L^2(\QQ)\), and set
+\[
+        L:=C_{\cK}^{\QQ}X.
+\]
+Then
+\[
+        L-C_{\cH}^{\QQ}L
+        =
+        \bigl(L-C_{\cG}^{\QQ}L\bigr)
+        +
+        \bigl(C_{\cG}^{\QQ}L-C_{\cH}^{\QQ}L\bigr),
+\]
+with orthogonal summands.  Consequently,
+\[
+        \norm{L-C_{\cH}^{\QQ}L}_{2,\QQ}^{2}
+        =
+        \norm{L-C_{\cG}^{\QQ}L}_{2,\QQ}^{2}
+        +
+        \norm{C_{\cG}^{\QQ}L-C_{\cH}^{\QQ}L}_{2,\QQ}^{2}.
+\]
+In addition,
+\[
+        \norm{L-C_{\cG}^{\QQ}L}_{2,\QQ}
+        =
+        \sup\left\{
+        \EE_\QQ[XR]:
+        R\in L^2(\QQ,\cK),\
+        \EE_\QQ[R\mid\cG]=0,\
+        \norm{R}_{2,\QQ}\le1
+        \right\}.
+\]
+\end{theorem}
+
+\begin{proof}
+The decomposition is the Pythagorean identity for the nested closed subspaces
+\[
+        L^2(\QQ,\cH)\subseteq L^2(\QQ,\cG)\subseteq L^2(\QQ,\cK).
+\]
+The first summand is orthogonal to \(L^2(\QQ,\cG)\); the second belongs to
+\(L^2(\QQ,\cG)\) and is orthogonal to \(L^2(\QQ,\cH)\).  This proves the squared-norm identity.
+
+The dual formula is Theorem~\ref{thm:public-annihilator} applied on
+\((\Omega,\cK,\QQ)\) with the sub-sigma-field \(\cG\).  Since \(R\) is \(\cK\)-measurable,
+\[
+        \EE_\QQ[XR]=\EE_\QQ[LR].
+\]
+\end{proof}
+
+The corresponding kernel restrictions separate surface-safe price freedom from dynamic-safe
+terminal-public price freedom.
+
+\begin{corollary}[Surface-safe and dynamic-safe price freedom]\label{cor:surface-dynamic-safe}
+Let \(X\in L^2(\QQ)\) and set \(L=C_{\cK}^{\QQ}X\).  A density satisfying
+\(\EE_\QQ[Z\mid\cH]=1\) preserves the calibrated surface field and can move the price contribution
+from the full surface residual \(L-C_{\cH}^{\QQ}L\).  A density satisfying the stronger condition
+\(\EE_\QQ[Z\mid\cG]=1\) preserves every bounded terminal public payoff and can move only the price
+contribution from the public-terminal residual \(L-C_{\cG}^{\QQ}L\).  The component
+\[
+        C_{\cG}^{\QQ}L-C_{\cH}^{\QQ}L
+\]
+is therefore invisible to the calibrated surface field \(\cH\), but visible once the larger
+terminal public field \(\cG\) is admitted.
+\end{corollary}
+
+\begin{proof}
+The tower property gives
+\(\EE_\QQ[Z\mid\cH]=\EE_\QQ[\EE_\QQ[Z\mid\cG]\mid\cH]=1\) whenever
+\(\EE_\QQ[Z\mid\cG]=1\).  Hence \(\cG\)-safe densities preserve the calibrated surface and, by
+Proposition~\ref{prop:exact-public-equivalence} applied to \(\cG\), preserve every bounded
+\(\cG\)-measurable terminal public payoff.
+
+Let \(R\in L^2(\QQ,\cK)\) be a residual direction.  If \(\EE_\QQ[R\mid\cG]=0\), then
+\[
+        \EE_\QQ[XR]
+        =
+        \EE_\QQ[(L-C_{\cG}^{\QQ}L)R],
+\]
+so any \(\cG\)-safe local tilt charges only the public-terminal residual.  If only
+\(\EE_\QQ[R\mid\cH]=0\) is imposed, the corresponding identity is
+\[
+        \EE_\QQ[XR]
+        =
+        \EE_\QQ[(L-C_{\cH}^{\QQ}L)R],
+\]
+and the full surface residual is available.  The orthogonal decomposition in
+Theorem~\ref{thm:nested-residuals} identifies
+\(C_{\cG}^{\QQ}L-C_{\cH}^{\QQ}L\) as the part that is \(\cH\)-invisible but already
+\(\cG\)-measurable.  Bounded residual directions approximate the corresponding nonzero components
+by Theorem~\ref{thm:public-annihilator} on the chosen conditioning field.
+\end{proof}
+
+\section{Compression-consistent pricing kernels}\label{sec:pricing-kernels}
+
+\begin{definition}[Public-equivalent pricing kernel]\label{def:public-equivalent}
+Let \(\QQ'\sim\QQ\) and set \(Z=\dd\QQ'/\dd\QQ\).  The measure \(\QQ'\) is
+\emph{public-equivalent} to \(\QQ\) relative to \(\cH\) if
+\[
+        Z>0,\qquad
+        \EE_\QQ[Z]=1,\qquad
+        \EE_\QQ[Z\mid\cH]=1.
+\]
+The family of such measures is denoted by \(\cQ_{\cH}(\QQ)\).
+The corresponding density class is
+\[
+        \cZ_{\cH}
+        :=
+        \{Z>0:\EE_\QQ[Z]=1,\ \EE_\QQ[Z\mid\cH]=1\}.
+\]
+The dynamic-safe public-terminal density class is
+\[
+        \cZ_{\cG}
+        :=
+        \{Z>0:\EE_\QQ[Z]=1,\ \EE_\QQ[Z\mid\cG]=1\}.
+\]
+When \(\cH\subseteq\cG\), the tower property gives
+\[
+        \cZ_{\cG}\subseteq\cZ_{\cH}.
+\]
+Every dynamic-safe public-terminal kernel therefore preserves the calibrated surface, but a
+surface-equivalent kernel need not preserve all terminal public payoffs.
+If \(\cP_m\) is a finite public payoff space containing constants, its finite-calibration density
+class is
+\[
+        \cZ_m
+        :=
+        \{Z>0:\EE_\QQ[Z]=1,\ \EE_\QQ[ZY]=\EE_\QQ[Y]\text{ for every }Y\in\cP_m\}.
+\]
+Then \(\cZ_{\cH}\subseteq\cZ_m\) whenever \(\cP_m\subset L^1(\QQ,\cH)\), and the inclusion is
+generally strict for finite \(m\).
+\end{definition}
+
+Conditional normalization is the invariance condition for public prices.
+
+\begin{lemma}[Public prices are preserved]\label{lem:public-preserved}
+If \(\QQ'\in\cQ_{\cH}(\QQ)\), then
+\[
+        \EE_{\QQ'}[Y]=\EE_\QQ[Y]
+\]
+for every bounded \(\cH\)-measurable \(Y\).  If \(X\in L^1(\QQ')\) and \(Y\) is bounded and
+\(\cH\)-measurable, then
+\[
+        \EE_{\QQ'}[XY]
+        =
+        \EE_\QQ\!\left[\EE_\QQ[ZX\mid\cH]\,Y\right].
+\]
+\end{lemma}
+
+\begin{proof}
+For bounded \(\cH\)-measurable \(Y\),
+\[
+        \EE_{\QQ'}[Y]
+        =
+        \EE_\QQ[ZY]
+        =
+        \EE_\QQ[\EE_\QQ[Z\mid\cH]Y]
+        =
+        \EE_\QQ[Y].
+\]
+For the mixed identity, \(ZX\in L^1(\QQ)\) by the assumption \(X\in L^1(\QQ')\).  Since
+\(Y\) is bounded and \(\cH\)-measurable,
+\[
+        \EE_{\QQ'}[XY]
+        =
+        \EE_\QQ[ZXY]
+        =
+        \EE_\QQ\!\left[\EE_\QQ[ZX\mid\cH]Y\right],
+\]
+which is the displayed formula.
+\end{proof}
+
+Bounded residual directions generate local fibers of public-equivalent kernels.
+
+\begin{theorem}[Bounded local residual tilts]\label{thm:kernel-tilt}
+Let \(R\in L^\infty(\QQ)\) satisfy
+\[
+        \EE_\QQ[R\mid\cH]=0.
+\]
+For any \(\eta\in\R\) with \(|\eta|\,\norm{R}_\infty<1\), define
+\[
+        Z_\eta:=1+\eta R,
+        \qquad
+        \frac{\dd\QQ_\eta}{\dd\QQ}:=Z_\eta.
+\]
+Then \(\QQ_\eta\in\cQ_{\cH}(\QQ)\).  In addition, for every \(X\in L^1(\QQ)\),
+\[
+        \EE_{\QQ_\eta}[X]
+        =
+        \EE_\QQ[X]+\eta\,\EE_\QQ[XR].
+\]
+\end{theorem}
+
+\begin{proof}
+The bound on \(\eta\) gives \(Z_\eta>0\).  Since
+\(\EE_\QQ[R]=\EE_\QQ[\EE_\QQ[R\mid\cH]]=0\), one has \(\EE_\QQ[Z_\eta]=1\).  Also
+\[
+        \EE_\QQ[Z_\eta\mid\cH]
+        =
+        1+\eta\,\EE_\QQ[R\mid\cH]
+        =
+        1.
+\]
+Thus \(\QQ_\eta\in\cQ_{\cH}(\QQ)\).  Finally,
+\[
+        \EE_{\QQ_\eta}[X]=\EE_\QQ[Z_\eta X]
+        =
+        \EE_\QQ[X]+\eta\,\EE_\QQ[XR].
+\]
+\end{proof}
+
+\begin{remark}
+The bounded linear tilt is a local residual-kernel device.  It gives explicit intervals and the
+tangent calculus in Theorem~\ref{thm:tangent-kernels}.  Unbounded Gaussian Perron factors use the
+positive conditional exponential kernels of Theorem~\ref{thm:conditional-exponential-kernel}.
+\end{remark}
+
+\begin{definition}[Public-equivalent tangent spaces]\label{def:public-equivalent-tangent}
+The public-equivalent tangent space at \(\QQ\) is
+\[
+        T_{\cH}
+        :=
+        \{R\in L^2(\QQ):\EE_\QQ[R\mid\cH]=0\}.
+\]
+If \(\cH\subseteq\cK\), the latent public-equivalent tangent space is
+\[
+        T_{\cH,\cK}
+        :=
+        \{R\in L^2(\QQ,\cK):\EE_\QQ[R\mid\cH]=0\}.
+\]
+\end{definition}
+
+The tangent space of the public-equivalent kernel fiber is the public residual space.
+
+\begin{theorem}[Tangent characterization of public-equivalent kernels]\label{thm:tangent-kernels}
+Let \((Z_\eps)_{\eps>0}\) be public-equivalent densities, so that
+\[
+        Z_\eps>0,\qquad \EE_\QQ[Z_\eps\mid\cH]=1.
+\]
+Assume
+\[
+        \frac{Z_\eps-1}{\eps}\longrightarrow R
+        \qquad\text{in }L^2(\QQ).
+\]
+Then \(R\in T_{\cH}\).  Conversely, if \(R\in L^\infty(\QQ)\cap T_{\cH}\), then
+\[
+        Z_\eps
+        :=
+        \frac{\exp(\eps R)}
+        {\EE_\QQ[\exp(\eps R)\mid\cH]}
+\]
+is public-equivalent and
+\[
+        \frac{Z_\eps-1}{\eps}\longrightarrow R
+        \qquad\text{in }L^2(\QQ).
+\]
+If, in addition, \(R\in T_{\cH,\cK}\) and \(X\in L^2(\QQ)\), then
+\[
+        \left.\frac{\dd}{\dd\eps}\right|_{\eps=0}
+        \EE_\QQ[Z_\eps X]
+        =
+        \EE_\QQ\!\left[
+        \bigl(C_{\cK}^{\QQ}X-C_{\cH}^{\QQ}C_{\cK}^{\QQ}X\bigr)R
+        \right].
+\]
+\end{theorem}
+
+\begin{proof}
+Because \(\EE_\QQ[Z_\eps\mid\cH]=1\),
+\[
+        \EE_\QQ\!\left[\frac{Z_\eps-1}{\eps}\,\middle|\,\cH\right]=0.
+\]
+Conditional expectation is an \(L^2\)-contraction, so passing to the \(L^2\)-limit gives
+\(\EE_\QQ[R\mid\cH]=0\).
+
+For the converse, boundedness gives a uniform expansion
+\[
+        \exp(\eps R)=1+\eps R+\eps^2 A_\eps,
+        \qquad
+        \sup_{|\eps|\le\eps_0}\norm{A_\eps}_\infty<\infty
+\]
+for every fixed small \(\eps_0\).  Since \(\EE_\QQ[R\mid\cH]=0\),
+\[
+        D_\eps:=\EE_\QQ[\exp(\eps R)\mid\cH]
+        =1+\eps^2\EE_\QQ[A_\eps\mid\cH].
+\]
+For small \(|\eps|\), \(D_\eps\) is bounded away from zero and
+\(D_\eps^{-1}=1+O(\eps^2)\) in \(L^\infty\).  Hence
+\[
+        Z_\eps
+        =
+        \frac{1+\eps R+O(\eps^2)}{1+O(\eps^2)}
+        =
+        1+\eps R+O(\eps^2)
+        \quad\text{in }L^2(\QQ),
+\]
+so \((Z_\eps-1)/\eps\to R\) in \(L^2(\QQ)\).  The conditional normalization gives
+\(\EE_\QQ[Z_\eps\mid\cH]=1\).
+
+Finally,
+\[
+        \frac{\EE_\QQ[Z_\eps X]-\EE_\QQ[X]}{\eps}
+        \to
+        \EE_\QQ[XR].
+\]
+If \(R\) is \(\cK\)-measurable and conditionally mean zero relative to \(\cH\), then
+\[
+        \EE_\QQ[XR]
+        =
+        \EE_\QQ[(C_{\cK}^{\QQ}X)R]
+        =
+        \EE_\QQ\!\left[
+        \bigl(C_{\cK}^{\QQ}X-C_{\cH}^{\QQ}C_{\cK}^{\QQ}X\bigr)R
+        \right].
+\]
+\end{proof}
+
+Conditional exponential normalization gives positive kernels for unbounded residual factors.
+
+\begin{theorem}[Conditional exponential public-equivalent kernel]\label{thm:conditional-exponential-kernel}
+Let \(R\in L^0(\QQ,\cK;\R^d)\), let \(\theta\) be a bounded \(\cH\)-measurable
+\(\R^d\)-valued parameter, and assume
+\[
+        0<
+        \EE_\QQ[\exp(\theta^\top R)\mid\cH]
+        <
+        \infty
+        \qquad\QQ\text{-a.s.}
+\]
+Define
+\[
+        Z_\theta
+        :=
+        \frac{\exp(\theta^\top R)}
+        {\EE_\QQ[\exp(\theta^\top R)\mid\cH]}.
+\]
+Then \(Z_\theta>0\), \(\EE_\QQ[Z_\theta\mid\cH]=1\), and every bounded public payoff price is
+preserved.  If \(X\in L^1(\QQ)\) and \(XZ_\theta\in L^1(\QQ)\), then
+\[
+        \EE_\QQ[Z_\theta X]
+        =
+        \EE_\QQ[Z_\theta C_{\cK}^{\QQ}X].
+\]
+If differentiation under the expectation is valid on an interval of parameters, then, with
+\(Y=C_{\cK}^{\QQ}X\),
+\[
+        \frac{\dd}{\dd t}\EE_\QQ[Z_{\theta+t h}X]\bigg|_{t=0}
+        =
+        \EE_\QQ\!\left[
+        Z_\theta Y\,
+        h^\top\{R-\EE_\QQ[Z_\theta R\mid\cH]\}
+        \right]
+\]
+for every bounded \(\cH\)-measurable direction \(h\).  In particular, at \(\theta=0\),
+\[
+        \left.\frac{\dd}{\dd t}\right|_{t=0}
+        \EE_\QQ[Z_{t h}X]
+        =
+        \EE_\QQ\!\left[h^\top\Cov_\QQ(Y,R\mid\cH)\right].
+\]
+A sufficient condition for the displayed derivative in a fixed bounded direction \(h\) is the
+existence of \(\delta>0\) and an integrable random variable \(G\) such that, for
+\(|t|\le\delta\),
+\[
+        |Y|\exp((\theta+t h)^\top R)(1+|h^\top R|)
+        \le G
+        \qquad\QQ\text{-a.s.},
+\]
+with the corresponding conditional normalizing denominators finite and strictly positive.
+\end{theorem}
+
+\begin{proof}
+The conditional normalization gives \(\EE_\QQ[Z_\theta\mid\cH]=1\), and positivity is built
+into the exponential form.  Proposition~\ref{prop:exact-public-equivalence} then gives public
+payoff preservation.  Since \(Z_\theta\) is \(\cK\)-measurable,
+\[
+        \EE_\QQ[Z_\theta X]
+        =
+        \EE_\QQ[Z_\theta\EE_\QQ[X\mid\cK]]
+        =
+        \EE_\QQ[Z_\theta C_{\cK}^{\QQ}X].
+\]
+For the derivative, work under the stated differentiability hypothesis; the displayed domination
+condition is one sufficient way to obtain it.  Set
+\[
+        D(t):=\EE_\QQ[\exp((\theta+t h)^\top R)\mid\cH].
+\]
+Then
+\[
+        D'(0)=\EE_\QQ[h^\top R\exp(\theta^\top R)\mid\cH],
+\]
+and the conditional denominator remains finite and strictly positive.  The logarithmic derivative
+is therefore
+\[
+        \frac{\dd}{\dd t}\log Z_{\theta+t h}\bigg|_{t=0}
+        =
+        h^\top R-\frac{D'(0)}{D(0)}
+        =
+        h^\top\{R-\EE_\QQ[Z_\theta R\mid\cH]\}.
+\]
+Dominated convergence justifies applying this derivative inside
+\(\EE_\QQ[Z_{\theta+t h}Y]\).  Multiplication by \(Z_\theta Y\) gives the displayed derivative
+formula.  At \(\theta=0\), \(Z_0=1\), and the derivative is
+\[
+        \EE_\QQ[h^\top Y(R-C_{\cH}^{\QQ}R)].
+\]
+Because \(h\) is \(\cH\)-measurable, subtracting \(C_{\cH}^{\QQ}Y\) does not change this moment.
+Thus
+\[
+        \EE_\QQ[h^\top Y(R-C_{\cH}^{\QQ}R)]
+        =
+        \EE_\QQ[h^\top(Y-C_{\cH}^{\QQ}Y)(R-C_{\cH}^{\QQ}R)],
+\]
+which is the displayed conditional covariance expression.
+\end{proof}
+
+Conditional Gaussianity turns the residual selector into a covariance charge.
+
+\begin{corollary}[Exact conditional-Gaussian Perron pricing formula]\label{cor:conditional-gaussian-pricing}
+Let \(Y=C_{\cK}^{\QQ}X\) and let \(R\in L^2(\QQ,\cK;\R^d)\).  Suppose that, conditionally on
+\(\cH\), the vector \((Y,R)\) is jointly Gaussian and has conditional covariance vector
+\[
+        c_{\cH}(X;R)
+        :=
+        \Cov_\QQ(Y,R\mid\cH)
+        \in L^1(\QQ,\cH;\R^d).
+\]
+For every bounded \(\cH\)-measurable \(\theta\in\R^d\), the exponential residual kernel
+\(Z_\theta\) satisfies
+\[
+        \EE_\QQ[Z_\theta X\mid\cH]
+        =
+        C_{\cH}^{\QQ}Y
+        +
+        \theta^\top c_{\cH}(X;R),
+\]
+and therefore
+\[
+        \EE_\QQ[Z_\theta X]
+        =
+        \EE_\QQ[X]
+        +
+        \EE_\QQ[\theta^\top c_{\cH}(X;R)].
+\]
+If \(A\) is symmetric positive definite and the selector is constrained pointwise by
+\(\theta^\top A\theta\le\rho^2\), then the conditional-Gaussian residual interval is
+\[
+        \EE_\QQ[X]
+        \pm
+        \rho\,\EE_\QQ\!\left[
+        \bigl(c_{\cH}(X;R)^\top A^{-1}c_{\cH}(X;R)\bigr)^{1/2}
+        \right].
+\]
+If \(\theta\) is deterministic rather than \(\cH\)-measurable, the corresponding interval is
+\[
+        \EE_\QQ[X]
+        \pm
+        \rho\,(\bar c^\top A^{-1}\bar c)^{1/2},
+        \qquad
+        \bar c:=\EE_\QQ[c_{\cH}(X;R)].
+\]
+\end{corollary}
+
+\begin{proof}
+Conditionally on \(\cH\), the Gaussian moment-generating identity gives
+\[
+        \frac{\EE_\QQ[Y\exp(\theta^\top R)\mid\cH]}
+        {\EE_\QQ[\exp(\theta^\top R)\mid\cH]}
+        =
+        C_{\cH}^{\QQ}Y+\theta^\top\Cov_\QQ(Y,R\mid\cH).
+\]
+The conditional normalizer in \(Z_\theta\) is exactly the denominator in this identity.  Hence
+\[
+        \EE_\QQ[Z_\theta Y\mid\cH]
+        =
+        C_{\cH}^{\QQ}Y+\theta^\top c_{\cH}(X;R).
+\]
+Since \(Z_\theta\) is \(\cK\)-measurable, \(X\) may be replaced by \(Y\).  Taking expectations gives
+the price formula.  The support function of the ellipsoid is
+\[
+        \sup_{\theta^\top A\theta\le\rho^2}\theta^\top c
+        =
+        \rho(c^\top A^{-1}c)^{1/2}.
+\]
+Applying this identity pointwise to the \(\cH\)-measurable vector \(c_{\cH}(X;R)\) gives the stated
+interval.  A measurable maximizer is obtained by taking
+\[
+        \theta
+        =
+        \rho\,
+        \frac{A^{-1}c_{\cH}(X;R)}{\bigl(c_{\cH}(X;R)^\top A^{-1}c_{\cH}(X;R)\bigr)^{1/2}}
+\]
+on the set where the denominator is positive and \(\theta=0\) otherwise; the opposite sign gives
+the lower endpoint.  If \(\theta\) is deterministic, the selector cannot vary across the public
+fiber, and the same support function is applied only to \(\bar c=\EE_\QQ[c_{\cH}(X;R)]\).
+\end{proof}
+
+Public-terminal normalization imposes the same residual selection after conditioning on \(\cG\).
+
+\begin{corollary}[Public-terminal exponential kernels]\label{cor:public-terminal-exponential}
+Let \(\cH\subseteq\cG\subseteq\cK\), let \(R\in L^0(\QQ,\cK;\R^d)\), and let \(\vartheta\) be a
+bounded \(\cG\)-measurable \(\R^d\)-valued parameter.  Assume
+\[
+        0<
+        \EE_\QQ[\exp(\vartheta^\top R)\mid\cG]
+        <
+        \infty
+        \qquad\QQ\text{-a.s.}
+\]
+Define
+\[
+        Z_\vartheta^{\cG}
+        :=
+        \frac{\exp(\vartheta^\top R)}
+        {\EE_\QQ[\exp(\vartheta^\top R)\mid\cG]}.
+\]
+Then
+\[
+        \EE_\QQ[Z_\vartheta^{\cG}\mid\cG]=1,
+        \qquad
+        Z_\vartheta^{\cG}\in\cZ_{\cG}\subseteq\cZ_{\cH}.
+\]
+Hence \(Z_\vartheta^{\cG}\) preserves every bounded terminal public payoff and, in particular, every
+bounded calibrated surface payoff.  If \((C_{\cK}^{\QQ}X,R)\) is conditionally Gaussian given
+\(\cG\), the conditional-Gaussian pricing formula of
+Corollary~\ref{cor:conditional-gaussian-pricing} holds with \(\cH\) replaced by \(\cG\).
+\end{corollary}
+
+\begin{proof}
+The conditional normalization gives
+\(\EE_\QQ[Z_\vartheta^{\cG}\mid\cG]=1\), so \(Z_\vartheta^{\cG}\in\cZ_{\cG}\).  The inclusion
+\(\cZ_{\cG}\subseteq\cZ_{\cH}\) follows from the tower property.  Payoff preservation follows from
+Proposition~\ref{prop:exact-public-equivalence}, first relative to \(\cG\) and then relative to
+\(\cH\).  The Gaussian formula is exactly Corollary~\ref{cor:conditional-gaussian-pricing} applied
+with the conditioning field \(\cG\).
+\end{proof}
+
+Public identification stops at the \(L^2(\QQ,\cH)\) quotient.
+
+\begin{theorem}[Public identification and latent non-identification]\label{thm:identification}
+Let \(X\in L^2(\QQ)\).  If all bounded \(\cH\)-measurable payoff tests against \(X\) are known, then
+they identify \(C_{\cH}^{\QQ}X\) and identify no component of \(X-C_{\cH}^{\QQ}X\).  Equivalently,
+the public residual component is exactly the component that can be moved by conditionally
+mean-zero bounded tilts.
+
+For the kernel statement, let \(R\in\cN_{\cH}^{\infty}\) and let \(\QQ_\eta\) be the tilt of
+Theorem~\ref{thm:kernel-tilt}.  Then every bounded public payoff has the same price under all
+\(\QQ_\eta\), while
+\[
+        \EE_{\QQ_\eta}[X]
+        =
+        \EE_\QQ[X]+\eta\,\EE_\QQ[(X-C_{\cH}^{\QQ}X)R].
+\]
+If \(X\ne C_{\cH}^{\QQ}X\), there exist bounded public-equivalent tilts for which the price of
+\(X\) changes.  In particular, public option information identifies compressed loadings such as
+\(C_{\cH}^{\QQ}(L_X^\QQ)\), not the full latent loading \(L_X^\QQ\), unless an additional selection
+rule is imposed.
+\end{theorem}
+
+\begin{proof}
+The Riesz representation theorem gives uniqueness of \(C_{\cH}^{\QQ}X\) from the pairings
+\[
+        Y\mapsto \EE_\QQ[XY],
+        \qquad Y\in L^2(\QQ,\cH),
+\]
+because
+\[
+        \EE_\QQ[XY]=\EE_\QQ[(C_{\cH}^{\QQ}X)Y]
+        \quad\text{for }Y\in L^2(\QQ,\cH).
+\]
+Bounded public tests are dense enough for the same identification.  If
+\(Y\in L^2(\QQ,\cH)\), the truncations \(Y_n=(-n)\vee(Y\wedge n)\) are bounded and
+\(\cH\)-measurable, and \(Y_n\to Y\) in \(L^2(\QQ)\).  The pairings converge by
+Cauchy--Schwarz.
+
+For the tilt statement, Lemma~\ref{lem:public-preserved} preserves every bounded public payoff.
+The affine pricing identity of Theorem~\ref{thm:kernel-tilt} and
+Theorem~\ref{thm:public-annihilator} give
+\[
+        \EE_{\QQ_\eta}[X]
+        =
+        \EE_\QQ[X]+\eta\,\EE_\QQ[XR]
+        =
+        \EE_\QQ[X]+\eta\,\EE_\QQ[(X-C_{\cH}^{\QQ}X)R].
+\]
+If \(X-C_{\cH}^{\QQ}X\ne0\), Theorem~\ref{thm:public-annihilator} supplies
+\(R_n\in\cN_{\cH}^{\infty}\) with \(\EE_\QQ[XR_n]\ne0\) for some \(n\).  For sufficiently small
+nonzero \(\eta\), \(1+\eta R_n>0\), and the resulting public-equivalent tilt changes the price of
+\(X\).
+\end{proof}
+
+\begin{remark}
+The theorem is static.  It does not assert that every tilt is generated by a particular
+continuous-time trading model.  Its role is the pricing-kernel statement for public
+non-identification.  If the market constrains only public \(\cH\)-measurable payoffs, latent
+residual directions remain free unless an additional selector is imposed.
+\end{remark}
+
+Finite public calibration replaces the sigma-field quotient by the observed payoff span.
+
+\begin{theorem}[Finite public calibration and residual freedom]\label{thm:finite-calibration}
+Let \(\cP_m=\Span\{1,Y_1,\ldots,Y_m\}\) be a finite-dimensional subspace of
+\(L^\infty(\QQ,\cH)\),
+and let \(C_m^{\QQ}\) be the \(L^2(\QQ)\)-projection onto \(\cP_m\).  For \(X\in L^2(\QQ)\),
+\[
+        X=C_m^{\QQ}X
+        \quad\Longleftrightarrow\quad
+        \EE_\QQ[XR]=0
+        \text{ for every }R\in\cN_m^\infty.
+\]
+If \(X-C_m^\QQ X\ne0\), then there is \(R\in\cN_m^\infty\) and \(\eta_0>0\) such that, for
+\(|\eta|<\eta_0\),
+\[
+        Z_\eta=1+\eta R
+\]
+defines an equivalent measure that preserves the prices of every payoff in \(\cP_m\) but changes
+the price of \(X\).
+\end{theorem}
+
+\begin{proof}
+For \(R\in\cN_m^\infty\),
+\[
+        \EE_\QQ[(C_m^\QQ X)R]=0,
+\]
+because \(C_m^\QQ X\in\cP_m\).  Hence
+\[
+        \EE_\QQ[XR]=\EE_\QQ[(X-C_m^\QQ X)R].
+\]
+If \(X=C_m^\QQ X\), all pairings vanish.
+
+Conversely, set \(\Delta:=X-C_m^\QQ X\).  If \(\Delta\ne0\), define
+\[
+        T_n:=(-n)\vee(\Delta\wedge n),
+        \qquad
+        R_n:=T_n-C_m^\QQ T_n.
+\]
+Since \(\cP_m\) is spanned by bounded functions, \(C_m^\QQ T_n\) is a finite linear combination of
+bounded functions; hence \(R_n\in L^\infty(\QQ)\).  It is orthogonal to every \(Y\in\cP_m\), so
+\(R_n\in\cN_m^\infty\).  The projections \(C_m^\QQ T_n\to C_m^\QQ\Delta=0\) in \(L^2(\QQ)\), while
+\(T_n\to\Delta\) in \(L^2(\QQ)\).  Therefore \(R_n\to\Delta\) in \(L^2(\QQ)\), and
+\[
+        \EE_\QQ[XR_n]
+        =
+        \EE_\QQ[\Delta R_n]
+        \to
+        \norm{\Delta}_{2,\QQ}^2>0.
+\]
+Choose \(n\) such that \(\EE_\QQ[XR_n]\ne0\), put \(R=R_n\), and take
+\(\eta_0=\norm{R}_\infty^{-1}\) if \(R\ne0\).  Then \(Z_\eta>0\) for \(|\eta|<\eta_0\),
+\(\EE_\QQ[Z_\eta]=1\) because constants lie in \(\cP_m\), and
+\[
+        \EE_\QQ[Z_\eta Y]=\EE_\QQ[Y]
+        \quad\text{for every }Y\in\cP_m.
+\]
+The price of \(X\) changes linearly by \(\eta\EE_\QQ[XR]\).
+\end{proof}
+
+\section{The Perron stress pricing model}\label{sec:pricing-model}
+
+\subsection{Price intervals}
+
+Let \(R\in L^\infty(\QQ)\) be a public-invisible residual, meaning
+\[
+        \EE_\QQ[R\mid\cH]=0.
+\]
+For \(0<\bar\eta\) with \(\bar\eta\,\norm{R}_\infty<1\), define
+\[
+        \cQ_{\cH}(\QQ;R,\bar\eta)
+        :=
+        \{\QQ_\eta:\ |\eta|\le \bar\eta\}.
+\]
+
+A bounded residual direction generates a one-dimensional pricing fiber.
+
+\begin{definition}[Compression-consistent price interval]\label{def:price-interval}
+For \(X\in L^1(\QQ)\), define
+\[
+        \Pi_{R,\bar\eta}^{-}(X)
+        :=
+        \inf_{\QQ'\in\cQ_{\cH}(\QQ;R,\bar\eta)}
+        \EE_{\QQ'}[X],
+        \qquad
+        \Pi_{R,\bar\eta}^{+}(X)
+        :=
+        \sup_{\QQ'\in\cQ_{\cH}(\QQ;R,\bar\eta)}
+        \EE_{\QQ'}[X].
+\]
+\end{definition}
+
+The scalar residual fiber has an exact support interval.
+
+\begin{theorem}[Explicit residual price interval]\label{thm:price-interval}
+For \(X\in L^1(\QQ)\),
+\[
+        \Pi_{R,\bar\eta}^{-}(X)
+        =
+        \EE_\QQ[X]
+        -
+        \bar\eta\,|\EE_\QQ[XR]|,
+        \qquad
+        \Pi_{R,\bar\eta}^{+}(X)
+        =
+        \EE_\QQ[X]
+        +
+        \bar\eta\,|\EE_\QQ[XR]|.
+\]
+The interval is nontrivial if and only if \(\EE_\QQ[XR]\ne0\).
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:kernel-tilt},
+\[
+        \EE_{\QQ_\eta}[X]
+        =
+        \EE_\QQ[X]+\eta\,\EE_\QQ[XR],
+        \qquad |\eta|\le\bar\eta.
+\]
+The infimum and supremum over a compact interval of a linear function are attained at the endpoints.
+If \(\EE_\QQ[XR]\ge0\), the infimum is attained at \(\eta=-\bar\eta\) and the supremum at
+\(\eta=\bar\eta\).  If \(\EE_\QQ[XR]<0\), the endpoint roles are reversed.  These two cases give
+the displayed formulas.
+\end{proof}
+
+\begin{remark}
+A finite-dimensional public option calibration system gives the same construction after replacing
+\(\EE_\QQ[R\mid\cH]=0\) by finitely many moment restrictions
+\(\EE_\QQ[R Y_i]=0\), as in Theorem~\ref{thm:finite-calibration}.  The sigma-field version is
+stronger: it preserves every bounded public payoff and keeps the latent residual directions
+separate from the calibrated surface coordinates.
+\end{remark}
+
+\subsection{Finite-dimensional residual budgets}
+
+The scalar interval treats one residual direction.  Several latent residual directions are kept by
+pricing over a bounded set of residual state-price perturbations.
+
+Finite residual blocks require a positivity boundary for linear density tilts.
+
+\begin{lemma}[Ellipsoidal positivity bound]\label{lem:ellipsoidal-positivity}
+Let \(R=(R_1,\ldots,R_d)^\top\) with \(R_i\in L^\infty(\QQ)\), and let \(A\) be symmetric positive
+definite.  Define
+\[
+        B_A
+        :=
+        \norm{(R^\top A^{-1}R)^{1/2}}_\infty.
+\]
+Then
+\[
+        \sup_{\vartheta^\top A\vartheta\le\rho^2}
+        \norm{\vartheta^\top R}_\infty
+        \le
+        \rho B_A.
+\]
+In particular, if \(\rho B_A<1\), then \(1+\vartheta^\top R>0\) for every
+\(\vartheta^\top A\vartheta\le\rho^2\).
+\end{lemma}
+
+\begin{proof}
+For each \(\omega\),
+\[
+        |\vartheta^\top R(\omega)|
+        =
+        |(A^{1/2}\vartheta)^\top(A^{-1/2}R(\omega))|
+        \le
+        (\vartheta^\top A\vartheta)^{1/2}(R(\omega)^\top A^{-1}R(\omega))^{1/2}.
+\]
+Taking the supremum over \(\omega\) and then over the ellipsoid gives the bound.  If
+\(\rho B_A<1\), every admissible \(\vartheta\) satisfies
+\(\norm{\vartheta^\top R}_\infty<1\), so \(1+\vartheta^\top R\) is strictly positive
+\(\QQ\)-a.s.
+\end{proof}
+
+\begin{definition}[Ellipsoidal residual kernel set]\label{def:ellipsoidal-residual-set}
+Let \(R_1,\ldots,R_d\in L^\infty(\QQ)\) satisfy
+\[
+        \EE_\QQ[R_i\mid\cH]=0,
+        \qquad i=1,\ldots,d.
+\]
+Write \(R=(R_1,\ldots,R_d)^\top\).  Let \(A\) be a symmetric positive definite \(d\times d\)
+matrix and let \(\rho>0\).  Assume
+\[
+        \sup_{\vartheta^\top A\vartheta\le \rho^2}
+        \norm{\vartheta^\top R}_{\infty}
+        <
+        1.
+\]
+The ellipsoidal public-equivalent residual kernel set is
+\[
+        \cQ_{\cH}^{A,\rho}(\QQ;R)
+        :=
+        \left\{
+        \QQ_\vartheta:
+        \frac{\dd\QQ_\vartheta}{\dd\QQ}=1+\vartheta^\top R,\ 
+        \vartheta^\top A\vartheta\le\rho^2
+        \right\}.
+\]
+\end{definition}
+
+The ellipsoidal residual block prices through its support function.
+
+\begin{theorem}[Ellipsoidal residual price interval]\label{thm:robust-residual-interval}
+Under Definition~\ref{def:ellipsoidal-residual-set}, let \(X\in L^1(\QQ)\) and define
+\[
+        b_X
+        :=
+        \bigl(\EE_\QQ[XR_1],\ldots,\EE_\QQ[XR_d]\bigr)^\top.
+\]
+Then every measure in \(\cQ_{\cH}^{A,\rho}(\QQ;R)\) preserves bounded public payoff prices, and
+\[
+        \inf_{\QQ'\in\cQ_{\cH}^{A,\rho}(\QQ;R)}
+        \EE_{\QQ'}[X]
+        =
+        \EE_\QQ[X]
+        -
+        \rho\,(b_X^\top A^{-1}b_X)^{1/2},
+\]
+\[
+        \sup_{\QQ'\in\cQ_{\cH}^{A,\rho}(\QQ;R)}
+        \EE_{\QQ'}[X]
+        =
+        \EE_\QQ[X]
+        +
+        \rho\,(b_X^\top A^{-1}b_X)^{1/2}.
+\]
+The interval collapses exactly when \(b_X=0\).
+\end{theorem}
+
+\begin{proof}
+For each admissible \(\vartheta\), the density \(1+\vartheta^\top R\) is strictly positive by the
+assumption in Definition~\ref{def:ellipsoidal-residual-set}.  Since constants are public and
+\(\EE_\QQ[R_i\mid\cH]=0\),
+\[
+        \EE_\QQ[1+\vartheta^\top R]=1,
+        \qquad
+        \EE_\QQ[1+\vartheta^\top R\mid\cH]=1.
+\]
+Thus \(\QQ_\vartheta\in\cQ_{\cH}(\QQ)\), and Lemma~\ref{lem:public-preserved} gives preservation of
+bounded public payoff prices.  For \(X\in L^1(\QQ)\),
+\[
+        \EE_{\QQ_\vartheta}[X]
+        =
+        \EE_\QQ[X]+\vartheta^\top b_X.
+\]
+It remains to optimize a linear functional over the ellipsoid
+\(\{\vartheta:\vartheta^\top A\vartheta\le\rho^2\}\).  Write
+\[
+        \vartheta^\top b_X
+        =
+        (A^{1/2}\vartheta)^\top(A^{-1/2}b_X).
+\]
+By Cauchy--Schwarz,
+\[
+        |\vartheta^\top b_X|
+        \le
+        (\vartheta^\top A\vartheta)^{1/2}(b_X^\top A^{-1}b_X)^{1/2}
+        \le
+        \rho(b_X^\top A^{-1}b_X)^{1/2}.
+\]
+If \(b_X\ne0\), equality is attained by
+\[
+        \vartheta_\pm
+        =
+        \pm
+        \rho\,
+        \frac{A^{-1}b_X}{(b_X^\top A^{-1}b_X)^{1/2}}.
+\]
+If \(b_X=0\), the linear term is zero for every admissible \(\vartheta\).  The displayed infimum
+and supremum follow.
+\end{proof}
+
+\subsection{Pricing decomposition}
+
+The pricing identity separates public shadow, baseline scalar price, and residual contribution.
+
+\begin{definition}[Public shadow, baseline price, and residual price]\label{def:pricing-decomposition}
+For \(X\in L^2(\QQ)\), define its public shadow and baseline scalar price by
+\[
+        S_X^{\mathrm{pub},\QQ}
+        :=
+        C_{\cH}^{\QQ}(L_X^\QQ),
+        \qquad
+        \Pi_0(X)
+        :=
+        \EE_\QQ[X]
+        =
+        \EE_\QQ[S_X^{\mathrm{pub},\QQ}].
+\]
+If \(R\in L^\infty(\QQ,\cK)\) satisfies \(\EE_\QQ[R\mid\cH]=0\), define the residual price
+contribution under the tilt parameter \(\eta\) by
+\[
+        \Pi_R^{\mathrm{res}}(X;\eta)
+        :=
+        \eta\,
+        \ip{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}{R}_{L^2(\QQ)}.
+\]
+\end{definition}
+
+The decomposition separates calibrated baseline price from residual selection.
+
+\begin{theorem}[Perron stress pricing decomposition]\label{thm:pricing-decomposition}
+Let \(R\in L^\infty(\QQ,\cK)\) satisfy \(\EE_\QQ[R\mid\cH]=0\), and assume
+\(|\eta|\,\norm{R}_\infty<1\).  For every \(X\in L^2(\QQ)\),
+\[
+        \EE_{\QQ_\eta}[X]
+        =
+        \Pi_0(X)
+        +
+        \Pi_R^{\mathrm{res}}(X;\eta).
+\]
+Once a baseline calibrated measure \(\QQ\) has been selected, every public-equivalent tilt
+decomposes into the same baseline public term plus a latent residual term.  The residual term is
+zero for every admissible \(R\) if and only if the latent loading \(L_X^\QQ\) is already public.
+\end{theorem}
+
+\begin{proof}
+Since \(\cH\subseteq\cK\),
+\[
+        \Pi_0(X)
+        =
+        \EE_\QQ[S_X^{\mathrm{pub},\QQ}]
+        =
+        \EE_\QQ[L_X^\QQ]
+        =
+        \EE_\QQ[X].
+\]
+Theorem~\ref{thm:kernel-tilt} gives
+\[
+        \EE_{\QQ_\eta}[X]
+        =
+        \EE_\QQ[X]+\eta\,\EE_\QQ[XR].
+\]
+Because \(R\) is \(\cK\)-measurable,
+\[
+        \EE_\QQ[XR]=\EE_\QQ[L_X^\QQ R].
+\]
+Because \(C_{\cH}^{\QQ}L_X^\QQ\) is \(\cH\)-measurable and \(\EE_\QQ[R\mid\cH]=0\),
+\[
+        \EE_\QQ[(C_{\cH}^{\QQ}L_X^\QQ)R]=0.
+\]
+Combining these identities gives
+\[
+        \EE_{\QQ_\eta}[X]
+        =
+        \Pi_0(X)
+        +
+        \eta\,\ip{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}{R}_{L^2(\QQ)}.
+\]
+If \(L_X^\QQ=C_{\cH}^{\QQ}L_X^\QQ\), the residual term is zero for every \(R\).  Conversely, if the
+residual term vanishes for every bounded \(\cK\)-measurable \(R\) with
+\(\EE_\QQ[R\mid\cH]=0\), apply Theorem~\ref{thm:public-annihilator} on the probability space
+\((\Omega,\cK,\QQ)\) to the random variable \(L_X^\QQ\).  This yields
+\(L_X^\QQ=C_{\cH}^{\QQ}L_X^\QQ\).
+\end{proof}
+
+A \(\cK\)-measurable public-equivalent density leaves the latent loading fixed and moves only its
+public projection under the new measure.
+
+\begin{theorem}[\(\cK\)-measurable public-equivalent tilts]\label{thm:k-measurable-tilts}
+Let \(Z>0\) satisfy \(\EE_\QQ[Z]=1\), \(Z\in L^\infty(\QQ,\cK)\), and
+\[
+        \EE_\QQ[Z\mid\cH]=1.
+\]
+Define \(\dd\QQ^Z=Z\,\dd\QQ\).  Then bounded public payoff prices are preserved.  In addition, for
+every \(X\) such that the displayed conditional expectations are well defined,
+\[
+        C_{\cK}^{\QQ^Z}X
+        =
+        C_{\cK}^{\QQ}X,
+\]
+and
+\[
+        C_{\cH}^{\QQ^Z}\!\left(C_{\cK}^{\QQ}X\right)
+        =
+        \EE_\QQ\!\left[Z\,C_{\cK}^{\QQ}X\mid\cH\right].
+\]
+In particular, if \(Z_\eta=1+\eta R\), where
+\[
+        R\in L^\infty(\QQ,\cK),
+        \qquad
+        \EE_\QQ[R\mid\cH]=0,
+        \qquad
+        |\eta|\norm{R}_\infty<1,
+\]
+then
+\[
+        C_{\cH}^{\QQ_\eta}(L_X^\QQ)
+        =
+        C_{\cH}^{\QQ}(L_X^\QQ)
+        +
+        \eta\,
+        \EE_\QQ\!\left[
+        (L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ)R
+        \mid\cH
+        \right].
+\]
+\end{theorem}
+
+\begin{proof}
+Public payoff preservation follows from Proposition~\ref{prop:exact-public-equivalence}.  Since
+\(Z\) is \(\cK\)-measurable, Bayes' formula gives
+\[
+        C_{\cK}^{\QQ^Z}X
+        =
+        \frac{\EE_\QQ[ZX\mid\cK]}{\EE_\QQ[Z\mid\cK]}
+        =
+        \frac{Z\,C_{\cK}^{\QQ}X}{Z}
+        =
+        C_{\cK}^{\QQ}X.
+\]
+The same Bayes formula at the public level gives, for \(Y=C_{\cK}^{\QQ}X\),
+\[
+        C_{\cH}^{\QQ^Z}Y
+        =
+        \frac{\EE_\QQ[ZY\mid\cH]}{\EE_\QQ[Z\mid\cH]}
+        =
+        \EE_\QQ[ZY\mid\cH],
+\]
+because \(\EE_\QQ[Z\mid\cH]=1\).
+For \(Z_\eta=1+\eta R\), this becomes
+\[
+        C_{\cH}^{\QQ_\eta}(L_X^\QQ)
+        =
+        C_{\cH}^{\QQ}(L_X^\QQ)
+        +
+        \eta\,\EE_\QQ[L_X^\QQ R\mid\cH].
+\]
+Since \(C_{\cH}^{\QQ}L_X^\QQ\) is \(\cH\)-measurable and
+\(\EE_\QQ[R\mid\cH]=0\),
+\[
+        \EE_\QQ[L_X^\QQ R\mid\cH]
+        =
+        \EE_\QQ[(L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ)R\mid\cH].
+\]
+\end{proof}
+
+\subsection{Perron residual price intervals}
+
+\begin{definition}[Canonical public-residual Perron coefficient]\label{def:perron-exposed-claim}
+Let \(Z\in L^2(\QQ,\cK)\), and define its public residual
+\[
+        Z_{\cH}^{\perp}:=Z-C_{\cH}^{\QQ}Z.
+\]
+If \(Z_{\cH}^{\perp}\ne0\), define the public-residual Perron coefficient of \(X\in L^2(\QQ)\) by
+\[
+        a_{\cH}(X;Z)
+        :=
+        \frac{
+        \ip{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}{Z_{\cH}^{\perp}}_{L^2(\QQ)}
+        }{
+        \norm{Z_{\cH}^{\perp}}_{2,\QQ}^{2}
+        }.
+\]
+This coefficient is defined for every square-integrable claim; no claim-specific decomposition is
+part of the definition.
+\end{definition}
+
+A single Perron residual factor reduces the interval to its canonical exposure coefficient.
+
+\begin{theorem}[Explicit Perron residual interval]\label{thm:perron-price-interval}
+Assume \(Z_{\cH}^{\perp}\in L^\infty(\QQ)\), \(Z_{\cH}^{\perp}\ne0\), and let \(X\in L^2(\QQ)\).
+If
+\[
+        0<\bar\eta\,\norm{Z_{\cH}^{\perp}}_{\infty}<1,
+\]
+then the public-equivalent kernels
+\[
+        \frac{\dd\QQ_\eta}{\dd\QQ}
+        =
+        1+\eta Z_{\cH}^{\perp},
+        \qquad |\eta|\le\bar\eta,
+\]
+generate the price interval
+\[
+        \EE_\QQ[X]
+        -
+        \bar\eta\,|a_{\cH}(X;Z)|\,\norm{Z_{\cH}^{\perp}}_{2,\QQ}^{2}
+        \le
+        \EE_{\QQ_\eta}[X]
+        \le
+        \EE_\QQ[X]
+        +
+        \bar\eta\,|a_{\cH}(X;Z)|\,\norm{Z_{\cH}^{\perp}}_{2,\QQ}^{2}.
+\]
+The endpoints are attained at \(\eta=\pm\bar\eta\), with the sign chosen according to
+\(a_{\cH}(X;Z)\).  The interval is nontrivial if and only if \(a_{\cH}(X;Z)\ne0\).
+\end{theorem}
+
+\begin{proof}
+Since \(Z_{\cH}^{\perp}=Z-C_{\cH}^{\QQ}Z\), it satisfies
+\(\EE_\QQ[Z_{\cH}^{\perp}\mid\cH]=0\).  The boundedness assumption and the restriction on
+\(\bar\eta\) allow Theorem~\ref{thm:kernel-tilt} to be applied with \(R=Z_{\cH}^{\perp}\).  Hence
+\[
+        \EE_{\QQ_\eta}[X]
+        =
+        \EE_\QQ[X]+\eta\,\EE_\QQ[XZ_{\cH}^{\perp}].
+\]
+Because \(Z_{\cH}^{\perp}\) is \(\cK\)-measurable,
+\[
+        \EE_\QQ[XZ_{\cH}^{\perp}]
+        =
+        \EE_\QQ[L_X^\QQ Z_{\cH}^{\perp}].
+\]
+The public projection \(C_{\cH}^{\QQ}L_X^\QQ\) is orthogonal to \(Z_{\cH}^{\perp}\), so
+\[
+        \EE_\QQ[XZ_{\cH}^{\perp}]
+        =
+        \ip{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}{Z_{\cH}^{\perp}}_{L^2(\QQ)}
+        =
+        a_{\cH}(X;Z)\,\norm{Z_{\cH}^{\perp}}_{2,\QQ}^{2}.
+\]
+Maximizing and minimizing the resulting affine function of \(\eta\) over
+\([-\bar\eta,\bar\eta]\) gives the interval and the endpoint statement.
+\end{proof}
+
+\begin{remark}
+If one happens to have a decomposition
+\[
+        L_X^\QQ=Y_X+a_XZ+B_X,
+        \qquad
+        Y_X\in L^2(\QQ,\cH),
+        \quad
+        \ip{B_X-C_{\cH}^{\QQ}B_X}{Z_{\cH}^{\perp}}=0,
+\]
+then \(a_{\cH}(X;Z)=a_X\).  The theorem instead uses the canonical projection coefficient, so this
+representation is optional.
+\end{remark}
+
+\begin{definition}[Normalized public-residual Perron factor]\label{def:normalized-perron-factor}
+Let \(P\in L^2(\QQ,\cK)\) be a Perron stress coordinate and suppose
+\[
+        P_{\cH}^{\perp}:=P-C_{\cH}^{\QQ}P\ne0.
+\]
+Define
+\[
+        \widehat P_{\cH}
+        :=
+        \frac{P_{\cH}^{\perp}}{\norm{P_{\cH}^{\perp}}_{2,\QQ}},
+        \qquad
+        \alpha_{\cH}(X;P)
+        :=
+        \ip{C_{\cK}^{\QQ}X-C_{\cH}^{\QQ}C_{\cK}^{\QQ}X}
+        {\widehat P_{\cH}}_{L^2(\QQ)}.
+\]
+\end{definition}
+
+Normalization removes the scale of the Perron coordinate from the scalar interval.
+
+\begin{theorem}[Scale-free scalar Perron interval]\label{thm:scale-free-perron-interval}
+Assume \(\widehat P_{\cH}\in L^\infty(\QQ)\) and
+\[
+        0<\rho\norm{\widehat P_{\cH}}_\infty<1.
+\]
+The public-equivalent densities
+\[
+        Z_\eta=1+\eta\widehat P_{\cH},
+        \qquad |\eta|\le\rho,
+\]
+generate the interval
+\[
+        \EE_\QQ[X]\pm\rho\,|\alpha_{\cH}(X;P)|.
+\]
+The interval is invariant under replacing \(P\) by \(cP\) for any nonzero scalar \(c\), up to the
+sign convention for \(\widehat P_{\cH}\) when \(c<0\).
+\end{theorem}
+
+\begin{proof}
+The factor \(\widehat P_{\cH}\) has zero conditional mean relative to \(\cH\) and unit
+\(L^2\)-norm.  The boundedness condition gives positivity of \(Z_\eta\).  Hence
+\[
+        \EE_\QQ[Z_\eta X]
+        =
+        \EE_\QQ[X]
+        +
+        \eta\,
+        \ip{C_{\cK}^{\QQ}X-C_{\cH}^{\QQ}C_{\cK}^{\QQ}X}
+        {\widehat P_{\cH}}_{L^2(\QQ)}.
+\]
+Optimizing over \(|\eta|\le\rho\) gives the interval.  Rescaling \(P\) by \(c\ne0\) cancels in the
+normalization, except for a sign change when \(c<0\), and the absolute value removes that sign from
+the interval width.
+\end{proof}
+
+\begin{definition}[Whitened Perron block]\label{def:whitened-perron-block}
+Let \(P=(P_1,\ldots,P_r)^\top\in L^2(\QQ,\cK;\R^r)\), and set
+\[
+        P_{\cH}^{\perp}:=P-C_{\cH}^{\QQ}P,
+        \qquad
+        G_{\cH}(P):=\EE_\QQ[P_{\cH}^{\perp}(P_{\cH}^{\perp})^\top].
+\]
+Assume \(G_{\cH}(P)\) is positive definite.  Define the whitened residual block
+\[
+        W_{\cH}:=G_{\cH}(P)^{-1/2}P_{\cH}^{\perp}
+\]
+and the whitened exposure vector
+\[
+        \alpha_{\cH}^{(r)}(X;P)
+        :=
+        \EE_\QQ\!\left[
+        W_{\cH}\bigl(C_{\cK}^{\QQ}X-C_{\cH}^{\QQ}C_{\cK}^{\QQ}X\bigr)
+        \right].
+\]
+\end{definition}
+
+Whitening makes the vector exposure independent of the chosen Perron basis.
+
+\begin{proposition}[Coordinate-invariant vector exposure]\label{prop:coordinate-invariant-exposure}
+If \(B\) is an invertible \(r\times r\) matrix and \(\widetilde P=BP\), then
+\[
+        \norm{\alpha_{\cH}^{(r)}(X;\widetilde P)}
+        =
+        \norm{\alpha_{\cH}^{(r)}(X;P)}.
+\]
+The norm \(\norm{\cdot}\) is the Euclidean norm on \(\R^r\).  Consequently, a spherical residual budget
+in whitened coordinates reports an interval width that is independent of the chosen basis for the
+Perron block.
+\end{proposition}
+
+\begin{proof}
+Let \(R=P-C_{\cH}^{\QQ}P\).  Then the residual block of \(\widetilde P\) is \(BR\), and its Gram
+matrix is \(BG_{\cH}(P)B^\top\).  Hence
+\[
+        W_{\cH}(\widetilde P)
+        =
+        (BG_{\cH}(P)B^\top)^{-1/2}BR
+        =
+        O\,W_{\cH}(P),
+        \qquad
+        O:=(BG_{\cH}(P)B^\top)^{-1/2}BG_{\cH}(P)^{1/2}.
+\]
+The matrix \(O\) is orthogonal because
+\[
+        OO^\top
+        =
+        (BG_{\cH}(P)B^\top)^{-1/2}BG_{\cH}(P)B^\top(BG_{\cH}(P)B^\top)^{-1/2}
+        =I_r.
+\]
+The exposure vector is therefore multiplied by \(O\), and its Euclidean norm is unchanged.
+\end{proof}
+
+\begin{definition}[Model-wide residual budget]\label{def:model-wide-residual-budget}
+For \(B<\infty\), define the bounded public-invisible latent residual budget
+\[
+        \cR_{\cH,\cK}(B)
+        :=
+        \left\{
+        R\in L^\infty(\QQ,\cK):
+        \EE_\QQ[R\mid\cH]=0,\ 
+        \norm{R}_{2,\QQ}\le1,\ 
+        \norm{R}_{\infty}\le B
+        \right\}.
+\]
+For \(0<\rho\) with \(\rho B<1\), define
+\[
+        \cZ_{\rho,B}
+        :=
+        \{1+\eta R:R\in\cR_{\cH,\cK}(B),\ |\eta|\le\rho\},
+\]
+and the residual support function
+\[
+        s_B(X)
+        :=
+        \sup_{R\in\cR_{\cH,\cK}(B)}\EE_\QQ[XR].
+\]
+\end{definition}
+
+The bounded residual budget yields the support interval for the latent fiber.
+
+\begin{theorem}[Residual-budget pricing interval]\label{thm:residual-budget-interval}
+Let \(X\in L^2(\QQ)\), and assume \(B<\infty\), \(\rho>0\), and \(\rho B<1\).  Every
+\(Z\in\cZ_{\rho,B}\) is a public-equivalent pricing density.  In addition,
+\[
+        \inf_{Z\in\cZ_{\rho,B}}\EE_\QQ[ZX]
+        =
+        \EE_\QQ[X]-\rho\,s_B(X),
+        \qquad
+        \sup_{Z\in\cZ_{\rho,B}}\EE_\QQ[ZX]
+        =
+        \EE_\QQ[X]+\rho\,s_B(X).
+\]
+If \(\Delta_{\cH}(X)=L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ\), then
+\[
+        0\le s_B(X)\le \norm{\Delta_{\cH}(X)}_{2,\QQ},
+        \qquad
+        s_B(X)\uparrow \norm{\Delta_{\cH}(X)}_{2,\QQ}
+        \quad\text{as }B\uparrow\infty.
+\]
+If \(\Delta_{\cH}(X)\ne0\) and
+\[
+        \frac{\Delta_{\cH}(X)}{\norm{\Delta_{\cH}(X)}_{2,\QQ}}
+        \in\cR_{\cH,\cK}(B),
+\]
+then \(s_B(X)=\norm{\Delta_{\cH}(X)}_{2,\QQ}\) already at that finite budget.
+\end{theorem}
+
+\begin{proof}
+For \(Z=1+\eta R\in\cZ_{\rho,B}\), the condition \(\rho B<1\) gives \(Z>0\).  Since
+\(\EE_\QQ[R\mid\cH]=0\), one has \(\EE_\QQ[Z]=1\) and
+\(\EE_\QQ[Z\mid\cH]=1\).  Thus \(Z\) is public-equivalent.
+
+For fixed \(R\),
+\[
+        \EE_\QQ[(1+\eta R)X]
+        =
+        \EE_\QQ[X]+\eta\,\EE_\QQ[XR].
+\]
+The residual set \(\cR_{\cH,\cK}(B)\) is symmetric: with \(R\) it contains \(-R\).  Hence
+\[
+        \sup_{R\in\cR_{\cH,\cK}(B),\ |\eta|\le\rho}
+        \eta\EE_\QQ[XR]
+        =
+        \rho\sup_{R\in\cR_{\cH,\cK}(B)}\EE_\QQ[XR]
+        =
+        \rho s_B(X),
+\]
+and the infimum is the negative of the same support value.  This gives the two endpoint formulas.
+
+Because \(R\) is \(\cK\)-measurable and conditionally mean zero relative to \(\cH\),
+\[
+        \EE_\QQ[XR]
+        =
+        \EE_\QQ[(L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ)R].
+\]
+Cauchy--Schwarz and \(\norm{R}_{2,\QQ}\le1\) give
+\[
+        s_B(X)\le \norm{\Delta_{\cH}(X)}_{2,\QQ}.
+\]
+Nonnegativity follows because \(0\in\cR_{\cH,\cK}(B)\).
+
+To prove the limiting statement, first note that \(\Delta_{\cH}(X)=0\) makes both sides vanish.
+Assume therefore that \(\Delta_{\cH}(X)\ne0\).  Let \(\Delta=\Delta_{\cH}(X)\) and define
+\[
+        T_n=(-n)\vee(\Delta\wedge n),
+        \qquad
+        R_n=T_n-\EE_\QQ[T_n\mid\cH].
+\]
+Then \(R_n\in L^\infty(\QQ,\cK)\), \(\EE_\QQ[R_n\mid\cH]=0\), and
+\(R_n\to\Delta\) in \(L^2(\QQ)\).  For large \(n\), set
+\(\widetilde R_n=R_n/\norm{R_n}_{2,\QQ}\).  Each \(\widetilde R_n\) belongs to
+\(\cR_{\cH,\cK}(B_n)\) for some finite \(B_n\), and
+\[
+        \EE_\QQ[X\widetilde R_n]\to\norm{\Delta}_{2,\QQ}.
+\]
+Fix \(\eps>0\) and choose \(n\) such that
+\(\EE_\QQ[X\widetilde R_n]>\norm{\Delta}_{2,\QQ}-\eps\).  For every
+\(B\ge B_n\), monotonicity of the residual budgets gives
+\(s_B(X)\ge \norm{\Delta}_{2,\QQ}-\eps\).  Together with the Cauchy--Schwarz upper bound, this proves
+\(s_B(X)\uparrow\norm{\Delta}_{2,\QQ}\).  If the normalized residual itself lies in
+\(\cR_{\cH,\cK}(B)\), it attains the Cauchy--Schwarz upper bound.
+\end{proof}
+
+The support function also separates surface-equivalent and dynamic-safe budgets.
+
+\begin{corollary}[Surface and dynamic-safe residual-budget intervals]\label{thm:nested-residual-budget-intervals}
+Let \(\cH\subseteq\cG\subseteq\cK\), let \(X\in L^2(\QQ)\), and let \(B<\infty\), \(\rho>0\) with
+\(\rho B<1\).  For \(\cA\in\{\cH,\cG\}\), define
+\[
+        \cR_{\cA,\cK}(B)
+        :=
+        \{R\in L^\infty(\QQ,\cK):
+        \EE_\QQ[R\mid\cA]=0,\ 
+        \norm{R}_{2,\QQ}\le1,\ 
+        \norm{R}_\infty\le B\},
+\]
+\[
+        s_{\cA,B}(X)
+        :=
+        \sup_{R\in\cR_{\cA,\cK}(B)}\EE_\QQ[XR].
+\]
+Then the surface-equivalent residual-budget interval is
+\[
+        \EE_\QQ[X]\pm \rho\,s_{\cH,B}(X),
+\]
+while the dynamic-safe public-terminal interval is
+\[
+        \EE_\QQ[X]\pm \rho\,s_{\cG,B}(X).
+\]
+In addition,
+\[
+        0\le s_{\cG,B}(X)\le s_{\cH,B}(X),
+\]
+and, as \(B\uparrow\infty\),
+\[
+        s_{\cH,B}(X)\uparrow
+        \norm{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}_{2,\QQ},
+        \qquad
+        s_{\cG,B}(X)\uparrow
+        \norm{L_X^\QQ-C_{\cG}^{\QQ}L_X^\QQ}_{2,\QQ}.
+\]
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{thm:residual-budget-interval} twice, first with \(\cA=\cH\) and then with
+\(\cA=\cG\).  Since \(\cH\subseteq\cG\), the condition \(\EE_\QQ[R\mid\cG]=0\) implies
+\(\EE_\QQ[R\mid\cH]=0\), so \(\cR_{\cG,\cK}(B)\subseteq\cR_{\cH,\cK}(B)\) and
+\(s_{\cG,B}(X)\le s_{\cH,B}(X)\).  The limiting identities are the norm-duality limits from
+Theorem~\ref{thm:residual-budget-interval} for the two sigma-fields.
+\end{proof}
+
+\subsection{Static Hilbert selected stress-charge prices}
+
+A point quote requires a convention for unspanned latent stress.  The static Hilbert selected
+price below is a convex residual selector.
+
+\begin{definition}[Compression residual and static Hilbert selected price]\label{def:hilbert-selected-price}
+For \(X\in L^2(\QQ)\), define the public compression residual
+\[
+        \Delta_{\cH}(X)
+        :=
+        L_X^\QQ-C_{\cH}^{\QQ}(L_X^\QQ).
+\]
+For \(\gamma\ge0\), define the static Hilbert selected Perron stress price
+\[
+        \Pi_{\mathrm{Hilb}}^\gamma(X)
+        :=
+        \EE_\QQ[X]+\gamma\,\norm{\Delta_{\cH}(X)}_{2,\QQ}.
+\]
+\end{definition}
+
+The static Hilbert selected price separates cash additivity from the nonlinear residual charge.
+
+\begin{proposition}[Basic properties of the static Hilbert selected price]\label{prop:stress-charge}
+The map \(\Pi_{\mathrm{Hilb}}^\gamma:L^2(\QQ)\to\R\) is cash additive, convex, and Lipschitz:
+\[
+        \Pi_{\mathrm{Hilb}}^\gamma(X+m)=\Pi_{\mathrm{Hilb}}^\gamma(X)+m,\qquad m\in\R,
+\]
+and
+\[
+        |\Pi_{\mathrm{Hilb}}^\gamma(X)-\Pi_{\mathrm{Hilb}}^\gamma(Y)|
+        \le
+        (1+\gamma)\,\norm{X-Y}_{2,\QQ}.
+\]
+If \(L_X^\QQ\) is already public, then \(\Pi_{\mathrm{Hilb}}^\gamma(X)=\EE_\QQ[X]\).
+\end{proposition}
+
+\begin{proof}
+Cash additivity follows because \(L_{X+m}^\QQ=L_X^\QQ+m\) and the public residual of a constant is
+zero.  Convexity follows from linearity of conditional expectation and the triangle inequality for
+the \(L^2\)-norm.  For Lipschitz continuity,
+\[
+|\EE_\QQ[X-Y]|\le \norm{X-Y}_{2,\QQ},
+\]
+and
+\[
+        \norm{\Delta_{\cH}(X)-\Delta_{\cH}(Y)}_{2,\QQ}
+        =
+        \norm{\Delta_{\cH}(X-Y)}_{2,\QQ}
+        \le
+        \norm{X-Y}_{2,\QQ},
+\]
+because \(\Delta_{\cH}\) is the difference of two nested orthogonal projections and hence an
+orthogonal projection onto
+\(L^2(\QQ,\cK)\ominus L^2(\QQ,\cH)\).  If \(L_X^\QQ\) is already public, then
+\(\Delta_{\cH}(X)=0\), so the stress-charge term vanishes and \(\Pi_{\mathrm{Hilb}}^\gamma(X)=\EE_\QQ[X]\).
+\end{proof}
+
+\begin{remark}
+\(\Pi_{\mathrm{Hilb}}^\gamma\) is a selected quote or risk-adjusted valuation rule after linear public
+calibration.  Linear no-arbitrage pricing remains represented by the public-equivalent interval in
+Theorem~\ref{thm:price-interval}.  The static Hilbert
+selected price is the upper endpoint for a claim-specific residual family when the boundedness and
+positivity conditions of Theorem~\ref{thm:stress-charge-as-envelope} hold.  Outside those
+conditions, the construction is a nonlinear residual selector rather than the endpoint of a common
+linear pricing family.
+\end{remark}
+
+Norm charges fail monotonicity unless an additional order-preserving selector is imposed.
+
+\begin{proposition}[Norm stress charges are not monotone in general]\label{prop:stress-charge-not-monotone}
+Let \(\gamma>0\).  Suppose \(\cH\) is trivial, \(\cK=\cF\), and the probability space contains an
+event \(A\) with
+\[
+        0<\QQ(A)<\frac{\gamma^2}{1+\gamma^2}.
+\]
+Then \(\Pi_{\mathrm{Hilb}}^\gamma(X)=\EE_\QQ[X]+\gamma\norm{X-\EE_\QQ[X]}_{2,\QQ}\) is not monotone: there are
+bounded claims \(X\le Y\) such that
+\[
+        \Pi_{\mathrm{Hilb}}^\gamma(X)>\Pi_{\mathrm{Hilb}}^\gamma(Y).
+\]
+\end{proposition}
+
+\begin{proof}
+Let \(p=\QQ(A)\), choose \(a>0\), and set \(Y=c\) and
+\[
+        X=c-a\one_A.
+\]
+Then \(X\le Y\).  Since \(\Pi_{\mathrm{Hilb}}^\gamma(Y)=c\),
+\[
+        \Pi_{\mathrm{Hilb}}^\gamma(X)
+        =
+        c-ap+\gamma a\sqrt{p(1-p)}.
+\]
+The strict inequality \(p<\gamma^2/(1+\gamma^2)\) is equivalent to
+\(\gamma\sqrt{p(1-p)}>p\), and hence \(\Pi_{\mathrm{Hilb}}^\gamma(X)>c=\Pi_{\mathrm{Hilb}}^\gamma(Y)\).
+\end{proof}
+
+\begin{remark}
+The proposition marks the interpretation boundary.  The norm charge is a convex residual valuation
+or capitalized quote after public calibration.  Monotone selected nonlinear pricing requires a
+monotone residual selector, such as the conditional entropic construction in Appendix~\ref{app:robust},
+or a coherent tail-risk functional.
+\end{remark}
+
+The stress charge becomes a linear-envelope endpoint only in the claim's own bounded residual direction.
+
+\begin{theorem}[Stress charge as a residual-envelope endpoint]\label{thm:stress-charge-as-envelope}
+Let \(X\in L^2(\QQ)\), and set
+\[
+        \Delta_{\cH}(X)
+        =
+        L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ.
+\]
+Assume \(\Delta_{\cH}(X)\in L^\infty(\QQ)\) and \(\Delta_{\cH}(X)\ne0\).  Define
+\[
+        R_X
+        :=
+        \frac{\Delta_{\cH}(X)}{\norm{\Delta_{\cH}(X)}_{2,\QQ}}.
+\]
+If \(0<\gamma\,\norm{R_X}_\infty<1\), then \(R_X\in\cN_\cH^\infty\), and the upper endpoint of
+the residual price interval generated by
+\[
+        \frac{\dd\QQ_\eta}{\dd\QQ}=1+\eta R_X,
+        \qquad |\eta|\le \gamma,
+\]
+is exactly
+\[
+        \Pi_{\mathrm{Hilb}}^\gamma(X)
+        =
+        \EE_\QQ[X]+\gamma\norm{\Delta_{\cH}(X)}_{2,\QQ}.
+\]
+The lower endpoint is
+\[
+        \EE_\QQ[X]-\gamma\norm{\Delta_{\cH}(X)}_{2,\QQ}.
+\]
+\end{theorem}
+
+\begin{proof}
+Since \(C_{\cH}^{\QQ}L_X^\QQ\) is the projection of \(L_X^\QQ\) onto \(L^2(\QQ,\cH)\),
+\[
+        \EE_\QQ[\Delta_{\cH}(X)\mid\cH]=0.
+\]
+Thus \(R_X\in\cN_\cH^\infty\).  The assumption
+\(\gamma\norm{R_X}_\infty<1\) makes \(1+\eta R_X\) strictly positive for every
+\(|\eta|\le\gamma\), so Theorem~\ref{thm:price-interval} applies.  In addition,
+\[
+        \EE_\QQ[XR_X]
+        =
+        \EE_\QQ[L_X^\QQ R_X]
+        =
+        \EE_\QQ[(L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ)R_X]
+        =
+        \norm{\Delta_{\cH}(X)}_{2,\QQ}.
+\]
+The price interval of Theorem~\ref{thm:price-interval} is therefore
+\[
+        \EE_\QQ[X]
+        \pm
+        \gamma\norm{\Delta_{\cH}(X)}_{2,\QQ}.
+\]
+Its upper endpoint is \(\Pi_{\mathrm{Hilb}}^\gamma(X)\) by Definition~\ref{def:hilbert-selected-price}.
+\end{proof}
+
+\begin{remark}
+The theorem is the finite-budget equality case of Theorem~\ref{thm:residual-budget-interval}.  It
+does not assert that the same residual direction prices all claims.  When the claim's own public
+compression residual is bounded, the static Hilbert selected price is the upper endpoint of a
+linear public-equivalent pricing family in that residual direction.
+\end{remark}
+
+\subsection{Finite public calibration}
+
+Let \(\mathfrak q\in\R^m\) be the vector of observed option-surface coordinates, and let
+\[
+        m(\theta)\in\R^m,\qquad \theta\in\Theta,
+\]
+be model-implied public coordinates.  A Perron stress specification typically has
+\[
+        m_i(\theta)
+        =
+        a_i(\theta)\,
+        C_{\cH_i}^{\QQ_\theta}(Z^\QQ_\theta)
+        +
+        b_i(\theta),
+\]
+or its date-indexed analogue.
+
+Finite calibration is an optimization problem on public coordinates, not a recovery theorem.
+
+\begin{proposition}[Weighted public calibration]\label{prop:calibration}
+Let \(\Theta\) be compact, let \(m:\Theta\to\R^m\) be continuous, and let \(W\) be a positive
+semidefinite \(m\times m\) matrix.  The objective
+\[
+        J(\theta)
+        :=
+        (\mathfrak q-m(\theta))^\top W(\mathfrak q-m(\theta))
+\]
+admits a minimizer on \(\Theta\).  Separately, if \(\Theta=\R^p\), \(m(\theta)=A\theta\), \(W\) is
+positive definite on the column space of \(A\), and \(A^\top W A\) is invertible, the unique
+unconstrained minimizer is
+\[
+        \widehat\theta
+        =
+        (A^\top W A)^{-1}A^\top W \mathfrak q.
+\]
+If \(\Theta\) is constrained, this formula solves the constrained problem only when the
+unconstrained minimizer belongs to \(\Theta\); otherwise the minimizer is the constrained
+\(W\)-least-squares projection over \(\Theta\).
+\end{proposition}
+
+\begin{proof}
+Continuity of \(J\) and compactness of \(\Theta\) give existence by Weierstrass.  In the
+unconstrained linear case, the normal equations are
+\(A^\top W A\theta=A^\top W\mathfrak q\), and invertibility gives the displayed solution.  With a
+constraint set, the same quadratic objective is minimized over \(\Theta\), so the normal-equation
+solution is valid only if it is feasible.
+\end{proof}
+
+\section{Synchronized stress and carrier-enriched public spans}\label{sec:sync-carrier}
+
+The residual fiber has a sharper form for equity-index options.  Index variance contains a
+synchronization component linking the index to single-name variance carriers, beyond its volatility
+level.  The index surface can be calibrated while the carrier decomposition remains incomplete.
+
+\begin{definition}[Synchronized-stress claim]\label{def:synchronized-stress-claim}
+Fix a maturity scale \(\tau\).  Let \(V_I^\tau\in L^2(\QQ)\) be an index variance-linked claim and
+let \(V_1^\tau,\ldots,V_n^\tau\in L^2(\QQ)\) be single-name variance-linked claims.  For nonnegative
+index weights \(\omega_i\) with \(\sum_i\omega_i=1\), define the diagonal carrier claim
+\[
+        V_{\mathrm{diag}}^\tau(\omega)
+        :=
+        \sum_{i=1}^n \omega_i^2 V_i^\tau
+\]
+and the synchronized-stress claim
+\[
+        X_{\mathrm{sync}}^\tau(\omega)
+        :=
+        V_I^\tau
+        -
+        V_{\mathrm{diag}}^\tau(\omega).
+\]
+Its priced synchronized loading is
+\[
+        L_{\mathrm{sync}}^\QQ
+        :=
+        C_{\cK}^{\QQ}X_{\mathrm{sync}}^\tau(\omega).
+\]
+\end{definition}
+
+The definition is payoff-level.  In a continuous diffusion benchmark,
+\(X_{\mathrm{sync}}^\tau\) corresponds to the covariance part of the index variance decomposition.
+In the incomplete-information setting used here, index and single-name surfaces can calibrate its
+public price while the latent loading still retains a Perron residual.
+
+\begin{definition}[Implied synchronization coordinate]\label{def:implied-sync-coordinate}
+Let \(v_I>0\) and \(v_i>0\) be public total-variance coordinates for the index and the single names
+at the same date and maturity.  Define
+\[
+        D_\omega(v)
+        :=
+        2\sum_{1\le i<j\le n}
+        \omega_i\omega_j (v_i v_j)^{1/2}.
+\]
+When \(D_\omega(v)>0\), the public implied synchronization coordinate is
+\[
+        \rho_{\mathrm{sync}}^{\mathrm{imp}}
+        :=
+        \frac{
+        v_I-\sum_{i=1}^n \omega_i^2 v_i
+        }{
+        D_\omega(v)
+        }.
+\]
+\end{definition}
+
+\begin{remark}
+The coordinate \(\rho_{\mathrm{sync}}^{\mathrm{imp}}\) is a public normalization of the
+index-versus-single-name variance wedge.  Without additional constituent-completeness and
+no-arbitrage restrictions it need not lie in \([-1,1]\), and should not be read as a literal
+correlation coefficient in every specification.
+\end{remark}
+
+The coordinate is public and is built only from observed index and carrier-surface total-variance
+coordinates.  It expresses the part of the index surface that prices synchronized variance relative
+to the visible single-name carrier span; the latent Perron state remains outside this coordinate.
+
+Synchronized stress inherits price freedom exactly through its public residual loading.
+
+\begin{proposition}[Public-equivalent freedom for synchronized stress]\label{prop:sync-residual-freedom}
+Let \(X_{\mathrm{sync}}^\tau(\omega)\) be as in
+Definition~\ref{def:synchronized-stress-claim}, and set
+\[
+        \Delta_{\cH}^{\mathrm{sync}}
+        :=
+        L_{\mathrm{sync}}^\QQ
+        -
+        C_{\cH}^{\QQ}L_{\mathrm{sync}}^\QQ.
+ \]
+If \(\Delta_{\cH}^{\mathrm{sync}}\ne0\), then public option calibration does not identify the
+price of \(X_{\mathrm{sync}}^\tau(\omega)\) inside the class of public-equivalent kernels.  If, in
+addition, the normalized residual
+\[
+        R_{\mathrm{sync}}
+        :=
+        \frac{\Delta_{\cH}^{\mathrm{sync}}}
+             {\norm{\Delta_{\cH}^{\mathrm{sync}}}_{2,\QQ}}
+\]
+is bounded and \(0<\rho\norm{R_{\mathrm{sync}}}_\infty<1\), then the public-equivalent densities
+\[
+        Z_\eta=1+\eta R_{\mathrm{sync}},
+        \qquad |\eta|\le\rho,
+\]
+generate the interval
+\[
+        \EE_\QQ[X_{\mathrm{sync}}^\tau(\omega)]
+        \pm
+        \rho\norm{\Delta_{\cH}^{\mathrm{sync}}}_{2,\QQ}.
+\]
+\end{proposition}
+
+\begin{proof}
+The residual \(\Delta_{\cH}^{\mathrm{sync}}\) has zero conditional expectation given \(\cH\).  If it
+is nonzero, Theorem~\ref{thm:public-annihilator}, applied to \(L_{\mathrm{sync}}^\QQ\) on
+\((\Omega,\cK,\QQ)\) relative to \(\cH\), gives a bounded \(\cK\)-measurable residual direction
+\(R\) with \(\EE_\QQ[L_{\mathrm{sync}}^\QQ R]\ne0\).  The tilt generated by \(R\) preserves public
+payoff prices by Theorem~\ref{thm:kernel-tilt}.  Since
+\[
+        \EE_\QQ[X_{\mathrm{sync}}^\tau R]
+        =
+        \EE_\QQ[L_{\mathrm{sync}}^\QQ R],
+\]
+the tilted price of \(X_{\mathrm{sync}}^\tau\) moves by the same residual pairing.  Under the
+additional bounded-normalized-residual assumption, \(R_{\mathrm{sync}}\) itself is admissible
+whenever \(0<\rho\norm{R_{\mathrm{sync}}}_\infty<1\).  The displayed interval is
+Theorem~\ref{thm:stress-charge-as-envelope} applied to \(X=X_{\mathrm{sync}}^\tau(\omega)\).  A
+nonzero residual makes the interval nontrivial, so public calibration alone cannot identify a
+unique synchronized-stress price.
+\end{proof}
+
+\begin{definition}[Index, carrier, and tradeable spans]\label{def:carrier-enriched-spans}
+Let \(\mathsf H_{\mathrm{idx}}\subseteq L^2(\QQ,\cH)\) be the finite public span generated by liquid index
+surface coordinates.  Let \(\mathsf H_{\mathrm{car}}\) be the enlarged finite public span obtained by
+adding single-name carrier-surface coordinates, with
+\[
+        \mathsf H_{\mathrm{idx}}
+        \subseteq
+        \mathsf H_{\mathrm{car}}
+        \subseteq
+        L^2(\QQ,\cH).
+\]
+Finally, let \(\cS_{\mathrm{car}}\subseteq \mathsf H_{\mathrm{car}}\) be the closed tradeable span generated
+by actually admissible public carrier instruments.
+\end{definition}
+
+The quotient \(\mathsf H_{\mathrm{car}}/\cS_{\mathrm{car}}\) is economically operative.  A
+single-name surface coordinate may improve public spanning even when the corresponding listed
+option portfolio is too costly, too sparse, or too unstable to serve as a hedge.
+
+Carrier enrichment shrinks residual width by projection monotonicity.
+
+\begin{proposition}[Carrier enrichment shrinks residual price width]\label{prop:carrier-enrichment-shrinks}
+Let
+\[
+        \mathsf U_0\subseteq\mathsf U_1\subseteq L^2(\QQ,\cK)
+\]
+be closed linear subspaces, and let \(P_j\) be the \(L^2(\QQ)\)-orthogonal projection onto
+\(\mathsf U_j\).  Let \(X\in L^2(\QQ)\) have latent loading \(L_X^\QQ=C_{\cK}^{\QQ}X\), and define
+\[
+        \Delta_j(X):=L_X^\QQ-P_jL_X^\QQ,
+        \qquad j=0,1.
+\]
+Then
+\[
+        \norm{\Delta_0(X)}_{2,\QQ}^{2}
+        =
+        \norm{P_1L_X^\QQ-P_0L_X^\QQ}_{2,\QQ}^{2}
+        +
+        \norm{\Delta_1(X)}_{2,\QQ}^{2}.
+\]
+In particular,
+\[
+        \norm{\Delta_1(X)}_{2,\QQ}
+        \le
+        \norm{\Delta_0(X)}_{2,\QQ}.
+\]
+Consequently, for any fixed stress-charge coefficient \(\gamma\ge0\), the selected residual charge
+weakly decreases when the public span is enriched from \(\mathsf U_0\) to \(\mathsf U_1\):
+\[
+        \gamma\norm{\Delta_1(X)}_{2,\QQ}
+        \le
+        \gamma\norm{\Delta_0(X)}_{2,\QQ}.
+\]
+\end{proposition}
+
+\begin{proof}
+Since \(\mathsf U_0\subseteq\mathsf U_1\), the projections satisfy \(P_0P_1=P_0\).  Hence
+\[
+        L_X^\QQ-P_0L_X^\QQ
+        =
+        \bigl(P_1L_X^\QQ-P_0L_X^\QQ\bigr)
+        +
+        \bigl(L_X^\QQ-P_1L_X^\QQ\bigr).
+\]
+The first term lies in \(\mathsf U_1\), while the second is orthogonal to \(\mathsf U_1\).
+Pythagoras gives the identity and the monotonicity.  The stress-charge statement follows by
+multiplying by \(\gamma\).
+\end{proof}
+
+The synchronized-stress interval contracts exactly when carrier coordinates add a nonzero
+projection of the residual stress direction.
+
+\begin{corollary}[Carrier-enriched synchronized-stress interval]\label{cor:carrier-sync-interval}
+Let \(P_{\mathrm{idx}}\) and \(P_{\mathrm{car}}\) be the \(L^2(\QQ)\)-orthogonal projections onto
+\(\mathsf H_{\mathrm{idx}}\) and \(\mathsf H_{\mathrm{car}}\), respectively.  Then the
+carrier-enriched public span weakly reduces the synchronized-stress residual norm relative to the
+index-only public span.  For any \(\gamma>0\), the selected residual charge reduction is strict
+exactly when
+\[
+        P_{\mathrm{car}}L_{\mathrm{sync}}^\QQ
+        \ne
+        P_{\mathrm{idx}}L_{\mathrm{sync}}^\QQ.
+\]
+\end{corollary}
+
+\begin{proof}
+Apply Proposition~\ref{prop:carrier-enrichment-shrinks} to the synchronized-stress claim and to the
+nested spaces \(\mathsf H_{\mathrm{idx}}\subseteq\mathsf H_{\mathrm{car}}\).  Orthogonal projection gives
+\[
+        \norm{L_{\mathrm{sync}}^\QQ-P_{\mathrm{idx}}L_{\mathrm{sync}}^\QQ}_{2,\QQ}^{2}
+        =
+        \norm{P_{\mathrm{car}}L_{\mathrm{sync}}^\QQ-P_{\mathrm{idx}}L_{\mathrm{sync}}^\QQ}_{2,\QQ}^{2}
+        +
+        \norm{L_{\mathrm{sync}}^\QQ-P_{\mathrm{car}}L_{\mathrm{sync}}^\QQ}_{2,\QQ}^{2}.
+\]
+The residual norm therefore cannot increase after carrier enrichment.  It decreases exactly when
+\(P_{\mathrm{car}}L_{\mathrm{sync}}^\QQ-P_{\mathrm{idx}}L_{\mathrm{sync}}^\QQ\ne0\), which is the stated
+strictness condition.
+\end{proof}
+
+A public-neutral spread can still carry latent residual price exposure.
+
+\begin{proposition}[Public-neutral residual spreads]\label{prop:public-neutral-residual-spread}
+Let \(X,Y\in L^2(\QQ)\) satisfy
+\[
+        C_{\cH}^{\QQ}L_X^\QQ
+        =
+        C_{\cH}^{\QQ}L_Y^\QQ.
+\]
+Set \(U=X-Y\).  Then \(U\) has zero public latent shadow:
+\[
+        C_{\cH}^{\QQ}L_U^\QQ=0.
+\]
+If \(L_U^\QQ\ne0\), public calibration assigns the same public latent shadow to \(X\) and \(Y\),
+but public-equivalent residual kernels can move the price of \(U\).  In particular, if
+\(L_U^\QQ\in L^\infty(\QQ)\) and \(0<\rho\norm{L_U^\QQ/\norm{L_U^\QQ}_{2,\QQ}}_\infty<1\), then
+the normalized residual tilt generated by \(L_U^\QQ\) gives the interval
+\[
+        \EE_\QQ[U]\pm \rho\norm{L_U^\QQ}_{2,\QQ}.
+\]
+\end{proposition}
+
+\begin{proof}
+Linearity of \(C_{\cK}^{\QQ}\) and \(C_{\cH}^{\QQ}\) gives
+\[
+        C_{\cH}^{\QQ}L_U^\QQ
+        =
+        C_{\cH}^{\QQ}L_X^\QQ-C_{\cH}^{\QQ}L_Y^\QQ
+        =
+        0.
+\]
+Since constants are \(\cH\)-measurable, this also implies
+\(\EE_\QQ[U]=\EE_\QQ[L_U^\QQ]=0\).  Thus \(L_U^\QQ\) is itself a public-invisible latent residual,
+and the baseline spread price is zero.  If \(L_U^\QQ\ne0\), Theorem~\ref{thm:public-annihilator},
+applied on \((\Omega,\cK,\QQ)\) relative to \(\cH\), supplies bounded \(\cK\)-measurable
+public-invisible residual directions with nonzero pairing against \(L_U^\QQ\).  The resulting
+public-equivalent tilts move the spread price because \(\EE_\QQ[UR]=\EE_\QQ[L_U^\QQ R]\) for such
+\(R\).  If \(L_U^\QQ\) is bounded, the normalized residual
+\(L_U^\QQ/\norm{L_U^\QQ}_{2,\QQ}\) is an admissible public-invisible direction under the stated
+positivity condition.  The interval then follows from Theorem~\ref{thm:price-interval}; it is the
+spread analogue of Proposition~\ref{prop:sync-residual-freedom}.
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:public-neutral-residual-spread} is a pricing statement, not a trading rule.
+Two claims can be indistinguishable to a public calibration system while retaining different
+latent-stress prices.  Listed-option relative-value implementations require execution, cost,
+liquidity, and carrier-absorption conditions.  Those conditions belong to the implementation module,
+not to the pricing geometry.
+\end{remark}
+
+\section{Visible hedging}\label{sec:hedging}
+
+Visible hedging is the projection problem on the tradeable public span.
+
+\begin{theorem}[Optimal visible hedge and residual decomposition]\label{thm:visible-hedge}
+Assume \(\cS\subseteq L^2(\QQ,\cH)\) is closed and contains constants.  For \(X\in L^2(\QQ)\), the
+unique \(L^2(\QQ)\)-optimal visible hedge is
+\[
+        H_X^\star=C_{\cS}^{\QQ}(X)=C_{\cS}^{\QQ}(L_X^\QQ).
+\]
+In addition,
+\[
+        \norm{X-H_X^\star}_{2,\QQ}^2
+        =
+        \norm{L_X^\QQ-C_{\cS}^{\QQ}(L_X^\QQ)}_{2,\QQ}^2
+        +
+        \norm{X-L_X^\QQ}_{2,\QQ}^2.
+\]
+\end{theorem}
+
+\begin{proof}
+Since \(\cS\) is a closed subspace of \(L^2(\QQ)\), the projection theorem gives a unique minimizer
+\(H_X^\star=C_{\cS}^{\QQ}(X)\).  Since \(\cS\subseteq L^2(\QQ,\cH)\subseteq L^2(\QQ,\cK)\), the
+orthogonal residual \(X-L_X^\QQ=X-C_{\cK}^{\QQ}X\) is orthogonal to \(\cS\).  Therefore
+\[
+        C_{\cS}^{\QQ}(X)=C_{\cS}^{\QQ}(L_X^\QQ).
+\]
+Finally,
+\[
+        X-H_X^\star
+        =
+        (L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ)
+        +
+        (X-L_X^\QQ).
+\]
+The first term is \(\cK\)-measurable, while the second is orthogonal to
+\(L^2(\QQ,\cK)\).  Pythagoras gives the claimed identity.
+\end{proof}
+
+\begin{definition}[Bounded residual density set]\label{def:bounded-residual-model-set}
+Let \(\cZ\) be a nonempty family of pricing densities satisfying
+\[
+        0<a\le Z\le b<\infty,
+        \qquad
+        \EE_\QQ[Z]=1.
+\]
+For a closed visible hedge space \(\cS\subseteq L^2(\QQ)\), define the residual-kernel visible-hedging loss
+\[
+        \mathcal L_{\cZ}(H;X)
+        :=
+        \sup_{Z\in\cZ}\EE_\QQ[Z(X-H)^2],
+        \qquad H\in\cS.
+\]
+\end{definition}
+
+Bounded residual-kernel uncertainty preserves the projection lower bound up to density constants.
+
+\begin{theorem}[Minimax visible hedge under residual-kernel uncertainty]\label{thm:minimax-visible-hedge}
+Let \(X\in L^2(\QQ)\), let \(\cS\) be a closed linear subspace of \(L^2(\QQ)\), and let \(\cZ\)
+satisfy Definition~\ref{def:bounded-residual-model-set}.  There is a unique minimizer
+\[
+        H_{\cZ}^{\star}(X)
+        :=
+        \argmin_{H\in\cS}\mathcal L_{\cZ}(H;X).
+\]
+In addition,
+\[
+        a\,\norm{X-C_{\cS}^{\QQ}X}_{2,\QQ}^2
+        \le
+        \inf_{H\in\cS}\mathcal L_{\cZ}(H;X)
+        \le
+        b\,\norm{X-C_{\cS}^{\QQ}X}_{2,\QQ}^2.
+\]
+If \(P\in L^2(\QQ)\) has \(P_{\cS}^{\perp}:=P-C_{\cS}^{\QQ}P\ne0\), then
+\[
+        \inf_{H\in\cS}\mathcal L_{\cZ}(H;X)
+        \ge
+        a\,\beta_{\cS}(X;P)^2\norm{P_{\cS}^{\perp}}_{2,\QQ}^2,
+\]
+where
+\[
+        \beta_{\cS}(X;P)
+        =
+        \frac{\ip{X-C_{\cS}^{\QQ}X}{P_{\cS}^{\perp}}_{L^2(\QQ)}}
+        {\norm{P_{\cS}^{\perp}}_{2,\QQ}^2}.
+\]
+\end{theorem}
+
+\begin{proof}
+For each fixed \(Z\in\cZ\), the map
+\[
+        H\mapsto \EE_\QQ[Z(X-H)^2]
+\]
+is finite, continuous, weakly lower semicontinuous, and \(a\)-strongly convex in the
+\(L^2(\QQ)\)-norm.  The common lower density bound is the modulus.  The supremum of functionals
+with this common modulus remains \(a\)-strongly convex, and a supremum of weakly lower
+semicontinuous functionals is weakly lower semicontinuous.  The loss is proper because
+\(\mathcal L_{\cZ}(0;X)\le b\norm{X}_{2,\QQ}^2\).  Coercivity follows from
+\[
+        \mathcal L_{\cZ}(H;X)
+        \ge
+        a\norm{X-H}_{2,\QQ}^2
+        \ge
+        \frac a2\norm{H}_{2,\QQ}^2-a\norm{X}_{2,\QQ}^2.
+\]
+A minimizing sequence is therefore bounded in \(\cS\).  Since \(\cS\) is a closed subspace of a
+Hilbert space, reflexivity and weak closedness give a weakly convergent subsequence whose limit
+remains in \(\cS\).  Weak lower semicontinuity gives existence.  Strong convexity gives
+uniqueness.
+
+The lower bound follows from
+\[
+        \mathcal L_{\cZ}(H;X)
+        \ge
+        a\norm{X-H}_{2,\QQ}^2
+\]
+and minimizing over \(H\in\cS\).  The upper bound follows by evaluating the minimax loss at the
+baseline projection:
+\[
+        \mathcal L_{\cZ}(C_{\cS}^{\QQ}X;X)
+        \le
+        b\norm{X-C_{\cS}^{\QQ}X}_{2,\QQ}^2.
+\]
+For the Perron lower bound, \(P_{\cS}^{\perp}\perp\cS\), so the scalar projection of
+\(X-C_{\cS}^{\QQ}X\) onto \(\Span\{P_{\cS}^{\perp}\}\) has squared norm
+\(\beta_{\cS}(X;P)^2\norm{P_{\cS}^{\perp}}_{2,\QQ}^2\).  Combining this one-dimensional
+projection bound with the first lower bound gives the claim.
+\end{proof}
+
+The visible residual separates into claim, latent, and public-basis components.
+
+\begin{theorem}[Three-part visible hedge decomposition]\label{thm:three-part-hedge}
+Assume \(\cS\subseteq L^2(\QQ,\cH)\) is closed and contains constants.  For every
+\(X\in L^2(\QQ)\),
+\[
+        \norm{X-C_{\cS}^{\QQ}X}_{2,\QQ}^2
+        =
+        \norm{X-L_X^\QQ}_{2,\QQ}^2
+        +
+        \norm{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}_{2,\QQ}^2
+        +
+        \norm{C_{\cH}^{\QQ}L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ}_{2,\QQ}^2.
+\]
+The three terms are, respectively, the claim component outside the latent Perron stress field, the
+latent compression residual not visible in public information, and the public basis residual not
+spanned by tradeable visible instruments.
+\end{theorem}
+
+\begin{proof}
+Theorem~\ref{thm:visible-hedge} gives
+\[
+        \norm{X-C_{\cS}^{\QQ}X}_{2,\QQ}^2
+        =
+        \norm{X-L_X^\QQ}_{2,\QQ}^2
+        +
+        \norm{L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ}_{2,\QQ}^2.
+\]
+It remains to decompose the second term.  Because
+\[
+        \cS\subseteq L^2(\QQ,\cH)\subseteq L^2(\QQ,\cK),
+\]
+the projection onto \(\cS\) satisfies
+\[
+        C_{\cS}^{\QQ}L_X^\QQ
+        =
+        C_{\cS}^{\QQ}\bigl(C_{\cH}^{\QQ}L_X^\QQ\bigr).
+\]
+Therefore
+\[
+        L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ
+        =
+        \bigl(L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ\bigr)
+        +
+        \bigl(C_{\cH}^{\QQ}L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ\bigr).
+\]
+The first term is orthogonal to \(L^2(\QQ,\cH)\), while the second term is
+\(\cH\)-measurable.  Pythagoras gives
+\[
+        \norm{L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ}_{2,\QQ}^2
+        =
+        \norm{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}_{2,\QQ}^2
+        +
+        \norm{C_{\cH}^{\QQ}L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ}_{2,\QQ}^2.
+\]
+Substitution proves the theorem.
+\end{proof}
+
+\begin{definition}[Perron hedge residual coordinate]\label{def:perron-coordinate}
+Let \(Z\in L^2(\QQ,\cK)\) be a centered latent Perron stress coordinate with
+\(\norm{Z-C_{\cS}^{\QQ}Z}_{2,\QQ}>0\).  Define
+\[
+        Z_{\cS}^{\perp}:=Z-C_{\cS}^{\QQ}Z.
+\]
+For \(X\in L^2(\QQ)\), define its visible residual Perron coefficient by
+\[
+        \beta_{\cS}(X;Z)
+        :=
+        \frac{
+        \ip{X-C_{\cS}^{\QQ}X}{Z_{\cS}^{\perp}}_{L^2(\QQ)}
+        }{
+        \norm{Z_{\cS}^{\perp}}_{2,\QQ}^2
+        }.
+\]
+\end{definition}
+
+A nonzero Perron coefficient imposes a visible hedge-risk floor.
+
+\begin{theorem}[Latent Perron residual lower bound]\label{thm:perron-lower-bound}
+Under the assumptions of Definition~\ref{def:perron-coordinate},
+\[
+        \inf_{H\in\cS}\norm{X-H}_{2,\QQ}^2
+        =
+        \norm{X-C_{\cS}^{\QQ}X}_{2,\QQ}^2
+        \ge
+        \beta_{\cS}(X;Z)^2\,\norm{Z_{\cS}^{\perp}}_{2,\QQ}^2.
+\]
+In particular, if \(\beta_{\cS}(X;Z)\ne0\), every visible hedge has strictly positive residual risk.
+\end{theorem}
+
+\begin{proof}
+The first equality is the projection theorem.  Since \(Z_{\cS}^{\perp}\) is orthogonal to \(\cS\),
+the one-dimensional projection of \(X-C_{\cS}^{\QQ}X\) onto \(\Span\{Z_{\cS}^{\perp}\}\) has squared
+norm
+\[
+        \frac{
+        \ip{X-C_{\cS}^{\QQ}X}{Z_{\cS}^{\perp}}_{L^2(\QQ)}^2
+        }{
+        \norm{Z_{\cS}^{\perp}}_{2,\QQ}^2
+        }
+        =
+        \beta_{\cS}(X;Z)^2\,\norm{Z_{\cS}^{\perp}}_{2,\QQ}^2.
+\]
+The squared norm of a vector dominates the squared norm of any of its orthogonal projections.  This
+proves the inequality.
+\end{proof}
+
+\begin{corollary}[Pure Perron loading]\label{cor:pure-perron-loading}
+If
+\[
+        L_X^\QQ=a_X Z + B,
+        \qquad
+        B-C_{\cS}^{\QQ}B\perp Z_{\cS}^{\perp},
+\]
+then
+\[
+        \inf_{H\in\cS}\norm{X-H}_{2,\QQ}^2
+        \ge
+        a_X^2\,\norm{Z_{\cS}^{\perp}}_{2,\QQ}^2.
+\]
+\end{corollary}
+
+\begin{proof}
+The orthogonality assumption gives \(\beta_{\cS}(X;Z)=a_X\).  Apply
+Theorem~\ref{thm:perron-lower-bound}.
+\end{proof}
+
+\section{Physical risk and capital}\label{sec:risk}
+
+The pricing model is calibrated under \(\QQ\).  Hedge performance and capital are evaluated under
+the physical measure \(\PP\).  A bounded density ratio transfers the Hilbert geometry across
+equivalent measures.
+
+\begin{assumption}[Bounded physical density]\label{ass:bounded-density}
+\(\PP\sim\QQ\) and \(M:=\dd\PP/\dd\QQ\) satisfies
+\[
+        0<m\le M\le \bar m<\infty
+        \qquad \QQ\text{-a.s.}
+\]
+\end{assumption}
+
+Bounded density ratios preserve the Hilbert geometry across \(\QQ\) and \(\PP\).
+
+\begin{proposition}[Equivalent \(L^2\) geometries]\label{prop:l2-equivalence}
+Under Assumption~\ref{ass:bounded-density},
+\[
+        m\,\norm{Y}_{2,\QQ}^2
+        \le
+        \norm{Y}_{2,\PP}^2
+        \le
+        \bar m\,\norm{Y}_{2,\QQ}^2
+        \qquad\text{for every }Y\in L^2(\QQ).
+\]
+Consequently \(L^2(\PP)=L^2(\QQ)\) as vector spaces with equivalent norms.  Any subspace closed in
+\(L^2(\QQ)\), including \(\cS\), is also closed in \(L^2(\PP)\).
+\end{proposition}
+
+\begin{proof}
+The inequalities follow directly from
+\[
+        \norm{Y}_{2,\PP}^2
+        =
+        \EE_\PP[Y^2]
+        =
+        \EE_\QQ[MY^2]
+\]
+and the bounds \(m\le M\le\bar m\).  They imply norm equivalence.  If \((Y_n)\) is a sequence in a
+\(L^2(\QQ)\)-closed subspace \(\cU\) and \(Y_n\to Y\) in \(L^2(\PP)\), then the lower bound implies
+\(Y_n\to Y\) in \(L^2(\QQ)\).  Hence \(Y\in\cU\).  Thus \(\cU\) is also closed in \(L^2(\PP)\).
+\end{proof}
+
+Bayes' formula gives the exact quotient by which a conditional projection changes under an
+equivalent measure.
+
+\begin{theorem}[Bayes correction for conditional projections]\label{thm:bayes-projection-correction}
+Let \(\PP\sim\QQ\), let \(M=\dd\PP/\dd\QQ\), and let \(\cA\subseteq\cF\).  Assume \(M>0\) and
+\(X\in L^1(\PP)\cap L^1(\QQ)\), and assume
+\[
+        (M-C_{\cA}^{\QQ}M)(X-C_{\cA}^{\QQ}X)\in L^1(\QQ).
+\]
+Then
+\[
+        C_{\cA}^{\PP}X-C_{\cA}^{\QQ}X
+        =
+        \frac{
+        \EE_\QQ\!\left[
+        (M-C_{\cA}^{\QQ}M)(X-C_{\cA}^{\QQ}X)
+        \mid\cA
+        \right]}
+        {C_{\cA}^{\QQ}M}.
+\]
+In particular, if \(M\) is \(\cA\)-measurable, then
+\[
+        C_{\cA}^{\PP}X=C_{\cA}^{\QQ}X.
+\]
+If \(X\in L^2(\QQ)\), \(0<m\le M\le\bar m<\infty\), and
+\[
+        \delta_{\cA}:=\norm{M-C_{\cA}^{\QQ}M}_\infty<\infty,
+\]
+then
+\[
+        \norm{C_{\cA}^{\PP}X-C_{\cA}^{\QQ}X}_{2,\QQ}
+        \le
+        \frac{\delta_{\cA}}{m}
+        \norm{X-C_{\cA}^{\QQ}X}_{2,\QQ}.
+\]
+\end{theorem}
+
+\begin{proof}
+Bayes' formula gives
+\[
+        C_{\cA}^{\PP}X
+        =
+        \frac{\EE_\QQ[MX\mid\cA]}{\EE_\QQ[M\mid\cA]}.
+\]
+The denominator is strictly positive a.s. because \(M>0\) a.s.  Subtracting
+\(C_{\cA}^{\QQ}X\) leaves the numerator
+\[
+        \EE_\QQ[M(X-C_{\cA}^{\QQ}X)\mid\cA].
+\]
+Since \(\EE_\QQ[X-C_{\cA}^{\QQ}X\mid\cA]=0\), this numerator is equal to
+\[
+        \EE_\QQ[(M-C_{\cA}^{\QQ}M)(X-C_{\cA}^{\QQ}X)\mid\cA].
+\]
+The displayed identity follows.  If \(M\) is \(\cA\)-measurable, the numerator vanishes.  For the
+bound, use \(C_{\cA}^{\QQ}M\ge m\), the \(L^2\)-contraction property of conditional expectation,
+and the definition of \(\delta_{\cA}\):
+\[
+\begin{aligned}
+        \norm{C_{\cA}^{\PP}X-C_{\cA}^{\QQ}X}_{2,\QQ}
+        &\le
+        \frac1m
+        \norm{\EE_\QQ[(M-C_{\cA}^{\QQ}M)(X-C_{\cA}^{\QQ}X)\mid\cA]}_{2,\QQ} \\
+        &\le
+        \frac1m
+        \norm{(M-C_{\cA}^{\QQ}M)(X-C_{\cA}^{\QQ}X)}_{2,\QQ} \\
+        &\le
+        \frac{\delta_{\cA}}{m}
+        \norm{X-C_{\cA}^{\QQ}X}_{2,\QQ}.
+\end{aligned}
+\]
+\end{proof}
+
+\begin{definition}[\(\QQ\)-visible hedge residual]\label{def:q-visible-hedge-residual}
+For \(X\in L^2(\QQ)\), define the terminal residual of the \(\QQ\)-optimal visible hedge by
+\[
+        R_X^{\cS}
+        :=
+        X-C_{\cS}^{\QQ}X.
+\]
+\end{definition}
+
+Physical hedge risk inherits the risk-neutral projection floor through density bounds.
+
+\begin{theorem}[Physical transfer of visible hedge risk]\label{thm:physical-transfer}
+Under Assumption~\ref{ass:bounded-density}, for every \(X\in L^2(\QQ)\) and every \(H\in\cS\),
+\[
+        \norm{X-H}_{2,\PP}^2
+        \ge
+        m\,\norm{X-H}_{2,\QQ}^2.
+\]
+Consequently,
+\[
+        \inf_{H\in\cS}\norm{X-H}_{2,\PP}^2
+        \ge
+        m\,\inf_{H\in\cS}\norm{X-H}_{2,\QQ}^2
+        \ge
+        m\,\beta_{\cS}(X;Z)^2\,\norm{Z_{\cS}^{\perp}}_{2,\QQ}^2
+\]
+whenever the Perron coordinate in Definition~\ref{def:perron-coordinate} is available.
+\end{theorem}
+
+\begin{proof}
+For any \(H\in\cS\),
+\[
+        \norm{X-H}_{2,\PP}^2
+        =
+        \EE_\QQ[M(X-H)^2]
+        \ge
+        m\,\EE_\QQ[(X-H)^2].
+\]
+Take the infimum over \(H\in\cS\), then apply Theorem~\ref{thm:perron-lower-bound}.
+\end{proof}
+
+The \(\QQ\)-visible hedge remains controlled under \(\PP\) only up to the density-distortion factor.
+
+\begin{corollary}[Performance guarantee for the \(\QQ\)-visible hedge under \(\PP\)]\label{cor:q-hedge-under-p}
+Under Assumption~\ref{ass:bounded-density}, let
+\[
+        G_\QQ=C_{\cS}^{\QQ}X,
+        \qquad
+        G_\PP=C_{\cS}^{\PP}X.
+\]
+Then
+\[
+        \norm{X-G_\QQ}_{2,\PP}^{2}
+        \le
+        \frac{\bar m}{m}
+        \norm{X-G_\PP}_{2,\PP}^{2}.
+\]
+Thus the baseline \(\QQ\)-projection hedge is within the density-ratio condition number of the
+physically optimal visible hedge.
+\end{corollary}
+
+\begin{proof}
+First,
+\[
+        \norm{X-G_\QQ}_{2,\PP}^2
+        \le
+        \bar m\norm{X-G_\QQ}_{2,\QQ}^2
+        =
+        \bar m\inf_{H\in\cS}\norm{X-H}_{2,\QQ}^2.
+\]
+For every \(H\in\cS\),
+\[
+        \norm{X-H}_{2,\PP}^2\ge m\norm{X-H}_{2,\QQ}^2.
+\]
+Taking infima gives
+\[
+        \inf_{H\in\cS}\norm{X-H}_{2,\QQ}^2
+        \le
+        \frac1m\inf_{H\in\cS}\norm{X-H}_{2,\PP}^2.
+\]
+Combining the two inequalities proves the claim.
+\end{proof}
+
+A bounded family of residual tilts gives uniform physical-transfer constants.
+
+\begin{theorem}[Uniform physical transfer under bounded residual tilts]\label{thm:uniform-physical-transfer}
+Assume \(M=\dd\PP/\dd\QQ\) satisfies
+\[
+        0<m\le M\le\bar m<\infty.
+\]
+Let \(R\in L^\infty(\QQ)\), let \(\EE_\QQ[R\mid\cH]=0\), and suppose
+\[
+        |\eta|\,\norm{R}_\infty\le r<1.
+\]
+Set \(Z_\eta=1+\eta R\) and \(\dd\QQ_\eta=Z_\eta\,\dd\QQ\).  Then
+\[
+        \frac{m}{1+r}
+        \le
+        \frac{\dd\PP}{\dd\QQ_\eta}
+        \le
+        \frac{\bar m}{1-r}
+        \qquad \QQ_\eta\text{-a.s.}
+\]
+Consequently, for every \(Y\in L^2(\QQ)\),
+\[
+        \norm{Y}_{2,\PP}^{2}
+        \ge
+        \frac{m}{1+r}\norm{Y}_{2,\QQ_\eta}^{2}.
+\]
+Visible-hedge residual lower bounds therefore transfer uniformly over all such bounded residual
+tilts.
+\end{theorem}
+
+\begin{proof}
+The bound on \(R\) gives
+\[
+        1-r\le Z_\eta\le1+r.
+\]
+Since \(\dd\PP/\dd\QQ_\eta=M/Z_\eta\), the displayed density-ratio bounds follow.  The measures
+\(\QQ_\eta\) and \(\QQ\) are equivalent, so the same tradeable residual is measured under equivalent
+probability structures.  Hence
+\[
+        \norm{Y}_{2,\PP}^{2}
+        =
+        \EE_{\QQ_\eta}\!\left[\frac{\dd\PP}{\dd\QQ_\eta}Y^2\right]
+        \ge
+        \frac{m}{1+r}\EE_{\QQ_\eta}[Y^2].
+\]
+\end{proof}
+
+\begin{corollary}[Physical three-part lower bound]\label{cor:physical-three-part}
+Under Assumption~\ref{ass:bounded-density},
+\[
+        \inf_{H\in\cS}\norm{X-H}_{2,\PP}^2
+        \ge
+        m\Bigl(
+        \norm{X-L_X^\QQ}_{2,\QQ}^2
+        +
+        \norm{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}_{2,\QQ}^2
+        +
+        \norm{C_{\cH}^{\QQ}L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ}_{2,\QQ}^2
+        \Bigr).
+\]
+\end{corollary}
+
+\begin{proof}
+Combine Theorem~\ref{thm:physical-transfer} with Theorem~\ref{thm:three-part-hedge}.
+\end{proof}
+
+The physical drift of a \(\QQ\)-orthogonal residual is governed by density misalignment.
+
+\begin{theorem}[Physical drift of the visible hedge residual]\label{thm:physical-residual-drift}
+Under Assumption~\ref{ass:bounded-density}, let \(R_X^{\cS}=X-C_{\cS}^{\QQ}X\).  Since constants
+belong to \(\cS\),
+\[
+        \EE_\QQ[R_X^{\cS}]=0.
+\]
+Its physical mean satisfies
+\[
+        |\EE_\PP[R_X^{\cS}]|
+        \le
+        \norm{M-1}_{2,\QQ}\,
+        \norm{R_X^{\cS}}_{2,\QQ}.
+\]
+Consequently,
+\[
+        |\EE_\PP[R_X^{\cS}]|
+        \le
+        \norm{M-1}_{2,\QQ}
+        \left(
+        \norm{X-L_X^\QQ}_{2,\QQ}^2
+        +
+        \norm{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}_{2,\QQ}^2
+        +
+        \norm{C_{\cH}^{\QQ}L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ}_{2,\QQ}^2
+        \right)^{1/2}.
+\]
+\end{theorem}
+
+\begin{proof}
+Because constants lie in \(\cS\), the projection residual \(R_X^{\cS}\) is orthogonal to constants
+in \(L^2(\QQ)\), so \(\EE_\QQ[R_X^{\cS}]=0\).  Therefore
+\[
+        \EE_\PP[R_X^{\cS}]
+        =
+        \EE_\QQ[M R_X^{\cS}]
+        =
+        \EE_\QQ[(M-1)R_X^{\cS}].
+\]
+Cauchy--Schwarz gives
+\[
+        |\EE_\PP[R_X^{\cS}]|
+        \le
+        \norm{M-1}_{2,\QQ}\norm{R_X^{\cS}}_{2,\QQ}.
+\]
+The final bound is obtained by substituting the identity in
+Theorem~\ref{thm:three-part-hedge}.
+\end{proof}
+
+\begin{definition}[Expected shortfall]\label{def:expected-shortfall}
+For \(\alpha\in(0,1)\) and a terminal loss \(Y\in L^2(\PP)\), define
+\[
+        \ES_{\alpha}^{\PP}(Y)
+        :=
+        \inf_{r\in\R}
+        \left\{
+        r+\frac{1}{1-\alpha}\EE_\PP[(Y-r)_+]
+        \right\}.
+\]
+The formula is the Rockafellar--Uryasev representation of expected shortfall; see
+\cite{rockafellarUryasev2000}.  Coherent risk measures in the sense of
+\cite{artzner1999coherent} provide the surrounding risk-measure setting, and
+\cite{follmerSchied2016} gives a standard reference for discrete-time risk-measure and pricing
+conventions.
+\end{definition}
+
+Expected shortfall supplies a convex capital input compatible with the residual geometry.
+
+\begin{proposition}[Expected shortfall as an admissible capital input]\label{prop:es-capital-input}
+For each \(\alpha\in(0,1)\), \(\ES_\alpha^\PP\) is finite on \(L^2(\PP)\), convex, and cash
+additive:
+\[
+        \ES_\alpha^\PP(Y+c)=\ES_\alpha^\PP(Y)+c,
+        \qquad c\in\R.
+\]
+In addition, if \(\EE_\PP[Y]=0\), then \(\ES_\alpha^\PP(Y)\ge0\).
+\end{proposition}
+
+\begin{proof}
+Finiteness from above follows by taking \(r=0\):
+\[
+        \ES_\alpha^\PP(Y)
+        \le
+        \frac{1}{1-\alpha}\EE_\PP[Y_+]
+        <
+        \infty.
+\]
+For a lower bound, use the pointwise inequality \(r+(Y-r)_+\ge Y\).  Since
+\((1-\alpha)^{-1}\ge1\), for every \(r\),
+\[
+        r+\frac{1}{1-\alpha}\EE_\PP[(Y-r)_+]
+        \ge
+        r+\EE_\PP[(Y-r)_+]
+        \ge
+        \EE_\PP[Y].
+\]
+Thus the infimum is finite.
+
+For cash additivity, set \(s=r-c\).  Then
+\[
+        r+\frac{1}{1-\alpha}\EE_\PP[(Y+c-r)_+]
+        =
+        c+s+\frac{1}{1-\alpha}\EE_\PP[(Y-s)_+],
+\]
+and the substitution \(s=r-c\) preserves the infimum.
+
+For convexity, let \(Y_1,Y_2\in L^2(\PP)\), \(\lambda\in[0,1]\), and choose arbitrary
+\(r_1,r_2\in\R\).  Put \(r=\lambda r_1+(1-\lambda)r_2\).  Since \(x\mapsto x_+\) is convex,
+\[
+        \bigl(\lambda Y_1+(1-\lambda)Y_2-r\bigr)_+
+        \le
+        \lambda(Y_1-r_1)_+
+        +
+        (1-\lambda)(Y_2-r_2)_+.
+\]
+After taking expectations and adding \(r\), one obtains the convexity inequality for these
+\(r_1,r_2\).  Taking the infimum over \(r_1\) and \(r_2\) proves convexity of
+\(\ES_\alpha^\PP\).  Finally, the lower-bound argument gives
+\(\ES_\alpha^\PP(Y)\ge\EE_\PP[Y]=0\) when \(Y\) is centered.
+\end{proof}
+
+\begin{definition}[Compression-adjusted capital]\label{def:capital}
+Under Assumption~\ref{ass:bounded-density}, let
+\(\rho_\PP:L^2(\PP)\to\R\cup\{+\infty\}\) be a convex cash-additive risk functional for terminal
+losses.  For \(X\in L^2(\QQ)\), set
+\[
+        \widetilde R_X^{\cS,\PP}
+        :=
+        R_X^{\cS}-\EE_\PP[R_X^{\cS}],
+\]
+and define
+\[
+        \mathrm{Cap}_{\gamma}(X)
+        :=
+        \rho_\PP\!\left(\widetilde R_X^{\cS,\PP}\right)
+        +
+        \gamma\,\norm{L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ}_{2,\QQ},
+        \qquad \gamma\ge0.
+\]
+\end{definition}
+
+\begin{proposition}[Convexity of compression-adjusted capital]\label{prop:capital-convex}
+If \(\rho_\PP\) is convex, then \(\mathrm{Cap}_{\gamma}\) is convex on \(L^2(\QQ)\).  If
+\(\rho_\PP(Y)\ge0\) whenever \(\EE_\PP[Y]=0\), then
+\[
+        \mathrm{Cap}_{\gamma}(X)
+        \ge
+        \gamma\,\norm{L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ}_{2,\QQ}.
+\]
+\end{proposition}
+
+\begin{proof}
+The map
+\[
+        X\mapsto \widetilde R_X^{\cS,\PP}
+        =
+        X-C_{\cS}^{\QQ}X-\EE_\PP[X-C_{\cS}^{\QQ}X]
+\]
+is linear from \(L^2(\QQ)\) into \(L^2(\PP)\).  Hence convexity of \(\rho_\PP\) gives convexity of
+the first term.  The map
+\[
+        X\mapsto L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ
+\]
+is linear, so its \(L^2(\QQ)\)-norm is convex.  The lower bound follows from the assumed
+nonnegativity of \(\rho_\PP\) on centered hedge residuals, since
+\(\widetilde R_X^{\cS,\PP}\) is centered under \(\PP\) in Definition~\ref{def:capital}.
+\end{proof}
+
+Compression-adjusted capital inherits the latent and public-basis residual floors.
+
+\begin{theorem}[Compression capital lower bounds]\label{thm:capital-lower-bound}
+Assume \(\rho_\PP\) is convex and satisfies \(\rho_\PP(Y)\ge0\) whenever \(\EE_\PP[Y]=0\).  Then
+for every \(X\in L^2(\QQ)\),
+\[
+        \mathrm{Cap}_{\gamma}(X)
+        \ge
+        \gamma
+        \left(
+        \norm{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}_{2,\QQ}^{2}
+        +
+        \norm{C_{\cH}^{\QQ}L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ}_{2,\QQ}^{2}
+        \right)^{1/2}.
+\]
+If a Perron coordinate \(Z\) is available as in Definition~\ref{def:perron-coordinate}, then
+\[
+        \mathrm{Cap}_{\gamma}(X)
+        \ge
+        \gamma\,|\beta_{\cS}(X;Z)|\,\norm{Z_{\cS}^{\perp}}_{2,\QQ}.
+\]
+\end{theorem}
+
+\begin{proof}
+The first lower bound in Proposition~\ref{prop:capital-convex} gives
+\[
+        \mathrm{Cap}_{\gamma}(X)
+        \ge
+        \gamma\norm{L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ}_{2,\QQ}.
+\]
+Since \(\cS\subseteq L^2(\QQ,\cH)\), the proof of Theorem~\ref{thm:three-part-hedge} gives the
+orthogonal decomposition
+\[
+        L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ
+        =
+        (L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ)
+        +
+        (C_{\cH}^{\QQ}L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ),
+\]
+with the first term orthogonal to \(L^2(\QQ,\cH)\) and the second term belonging to
+\(L^2(\QQ,\cH)\).  Pythagoras gives the displayed square-root expression.
+
+For the Perron bound, \(Z_{\cS}^{\perp}\) is orthogonal to \(\cS\), and
+\[
+        \ip{X-C_{\cS}^{\QQ}X}{Z_{\cS}^{\perp}}
+        =
+        \ip{L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ}{Z_{\cS}^{\perp}}.
+\]
+By Cauchy--Schwarz and Definition~\ref{def:perron-coordinate},
+\[
+        |\beta_{\cS}(X;Z)|\,\norm{Z_{\cS}^{\perp}}_{2,\QQ}
+        \le
+        \norm{L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ}_{2,\QQ}.
+\]
+Combining this inequality with the capital lower bound proves the result.
+\end{proof}
+
+\begin{remark}
+Expected shortfall is one admissible choice for \(\rho_\PP\).  Proposition
+\ref{prop:es-capital-input} verifies the convexity and nonnegativity properties used above.  The
+results are stated for a general convex risk functional because the projection arguments do not
+depend on a particular tail functional.
+\end{remark}
+
+\section{Convex compression risk}\label{sec:convex}
+
+The \(L^2\)-residual is not the only compression cost.  For variance-linked and stress-amplifying
+claims, convexity adds a pricing and capital term.
+
+\begin{assumption}[Strong convexity]\label{ass:strong-convex}
+\(\Phi:\R\to\R\) is Borel, integrable at the random variables considered in this section, and
+\(\underline\kappa\)-strongly convex for some \(\underline\kappa>0\):
+\[
+        \Phi(y)
+        \ge
+        \Phi(x)+g_x(y-x)+\frac{\underline\kappa}{2}(y-x)^2
+\]
+for every \(x,y\in\R\) and some subgradient \(g_x\in\partial\Phi(x)\).
+\end{assumption}
+
+Strong convexity converts public compression into a quadratic latent loss.
+
+\begin{theorem}[Latent convex compression gap]\label{thm:latent-convex-gap}
+Under Assumption~\ref{ass:strong-convex}, let \(X\in L^2(\QQ)\), set
+\(L_X^\QQ=C_{\cK}^{\QQ}X\), and assume
+\(\Phi(L_X^\QQ),\Phi(C_{\cH}^{\QQ}L_X^\QQ)\in L^1(\QQ)\).  Then
+\[
+        \EE_\QQ[\Phi(L_X^\QQ)]
+        -
+        \EE_\QQ[\Phi(C_{\cH}^{\QQ}L_X^\QQ)]
+        \ge
+        \frac{\underline\kappa}{2}
+        \norm{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}_{2,\QQ}^{2}.
+\]
+If \(Z\in L^2(\QQ,\cK)\) has nonzero public residual \(Z_{\cH}^{\perp}\), then
+\[
+        \EE_\QQ[\Phi(L_X^\QQ)]
+        -
+        \EE_\QQ[\Phi(C_{\cH}^{\QQ}L_X^\QQ)]
+        \ge
+        \frac{\underline\kappa}{2}
+        a_{\cH}(X;Z)^2
+        \norm{Z_{\cH}^{\perp}}_{2,\QQ}^{2}.
+\]
+\end{theorem}
+
+\begin{proof}
+Set \(Y=C_{\cH}^{\QQ}L_X^\QQ\).  Strong convexity gives the convex function
+\(\Psi(x):=\Phi(x)-\frac{\underline\kappa}{2}x^2\).  The stated integrability and
+\(L_X^\QQ,Y\in L^2(\QQ)\) make the following expectations finite.  Conditional Jensen gives
+\[
+        \EE_\QQ[\Psi(L_X^\QQ)\mid\cH]\ge \Psi(Y).
+\]
+After taking expectations and rearranging,
+\[
+        \EE_\QQ[\Phi(L_X^\QQ)]-\EE_\QQ[\Phi(Y)]
+        \ge
+        \frac{\underline\kappa}{2}
+        \left(\EE_\QQ[(L_X^\QQ)^2]-\EE_\QQ[Y^2]\right)
+        =
+        \frac{\underline\kappa}{2}\norm{L_X^\QQ-Y}_{2,\QQ}^2,
+\]
+because \(Y\) is the orthogonal projection of \(L_X^\QQ\) onto \(L^2(\QQ,\cH)\).  This proves the
+first inequality.  The second follows because the one-dimensional projection of
+\(L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ\) onto
+\(\Span\{Z_{\cH}^{\perp}\}\) has squared norm
+\[
+        a_{\cH}(X;Z)^2\norm{Z_{\cH}^{\perp}}_{2,\QQ}^{2},
+\]
+which is bounded above by
+\(\norm{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}_{2,\QQ}^{2}\).
+\end{proof}
+
+Compression onto the public field gives the corresponding convex gap.
+
+\begin{theorem}[Convex public compression gap]\label{thm:convex-gap}
+Under Assumption~\ref{ass:strong-convex}, let \(X\in L^2(\QQ)\), and assume
+\(\Phi(X),\Phi(C_{\cH}^{\QQ}X)\in L^1(\QQ)\).  Then
+\[
+        \EE_\QQ[\Phi(X)]
+        -
+        \EE_\QQ[\Phi(C_{\cH}^{\QQ}X)]
+        \ge
+        \frac{\underline\kappa}{2}
+        \norm{X-C_{\cH}^{\QQ}X}_{2,\QQ}^2.
+\]
+If \(L_X^\QQ=C_{\cK}^{\QQ}X\), then
+\[
+        \norm{X-C_{\cH}^{\QQ}X}_{2,\QQ}^2
+        =
+        \norm{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}_{2,\QQ}^2
+        +
+        \norm{X-L_X^\QQ}_{2,\QQ}^2.
+\]
+\end{theorem}
+
+\begin{proof}
+Set \(Y=C_{\cH}^{\QQ}X\).  Strong convexity gives the convex function
+\(\Psi(x):=\Phi(x)-\frac{\underline\kappa}{2}x^2\).  The stated integrability and
+\(X,Y\in L^2(\QQ)\) make the following expectations finite.  Conditional Jensen gives
+\[
+        \EE_\QQ[\Psi(X)\mid\cH]\ge \Psi(Y).
+\]
+After taking expectations and rearranging,
+\[
+        \EE_\QQ[\Phi(X)]-\EE_\QQ[\Phi(Y)]
+        \ge
+        \frac{\underline\kappa}{2}
+        \left(\EE_\QQ[X^2]-\EE_\QQ[Y^2]\right)
+        =
+        \frac{\underline\kappa}{2}\norm{X-Y}_{2,\QQ}^2,
+\]
+because \(Y=C_{\cH}^{\QQ}X\) is the orthogonal projection of \(X\) onto
+\(L^2(\QQ,\cH)\).  The second identity is Pythagoras for the nested projections
+\[
+        L^2(\QQ,\cH)\subseteq L^2(\QQ,\cK)\subseteq L^2(\QQ,\cF).
+\]
+\end{proof}
+
+\begin{corollary}[Convex Perron residual contribution]\label{cor:convex-perron}
+Under the assumptions of Theorem~\ref{thm:convex-gap}, if \(Z\) is a Perron stress coordinate as in
+Definition~\ref{def:perron-coordinate} with \(\cS=L^2(\QQ,\cH)\), write
+\(\beta_{\cH}(X;Z):=\beta_{\cS}(X;Z)\) for this specialization.  Then
+\[
+        \EE_\QQ[\Phi(X)]
+        -
+        \EE_\QQ[\Phi(C_{\cH}^{\QQ}X)]
+        \ge
+        \frac{\underline\kappa}{2}
+        \beta_{\cH}(X;Z)^2
+        \norm{Z-C_{\cH}^{\QQ}Z}_{2,\QQ}^2.
+\]
+\end{corollary}
+
+\begin{proof}
+Combine Theorem~\ref{thm:convex-gap} with Theorem~\ref{thm:perron-lower-bound}, taking
+\(\cS=L^2(\QQ,\cH)\).
+\end{proof}
+
+\section{Observable estimands}\label{sec:observable}
+
+Fixed-date pricing statements generate date-indexed estimands.  The objects below specify what the
+pricing geometry makes observable; they are neither estimates nor trading rules, and they do not
+recover the latent Perron state.
+
+Fix a finite set of dates \(\cD\).  Let \(P_d\) be a Perron stress coordinate available
+at date \(d\in\cD\), and let \(Q_d\in\R^m\) be a finite vector of public option-surface
+coordinates.  The finite public span is
+\[
+        \mathsf H_m=\Span\{1,Q_{\cdot,1},\ldots,Q_{\cdot,m}\}.
+\]
+The finite public projection is
+\[
+        P_d=\widehat P_{\mathsf H_m,d}+\widehat P^{\perp}_{\mathsf H_m,d},
+\]
+with projection and residual shares, all sums being over \(d\in\cD\),
+\[
+        \widehat{\mathsf C}_m
+        :=
+        \frac{\sum_{d\in\cD}(\widehat P_{\mathsf H_m,d}-\overline{\widehat P}_{\mathsf H_m})^2}
+             {\sum_{d\in\cD}(P_d-\overline P)^2},
+        \qquad
+        \widehat{\mathsf R}_m:=1-\widehat{\mathsf C}_m.
+\]
+These ratios are reported only when the denominator is strictly positive.  They are finite-span
+quantities.  They describe the public shadow and residual component associated with the chosen
+public coordinates, not the full latent sigma-field.
+
+Carrier enrichment is the second finite-span object.  If \(\mathsf H_{\mathrm{idx}}\) is the span
+generated by liquid index-surface coordinates and
+\(\mathsf H_{\mathrm{car}}\supseteq\mathsf H_{\mathrm{idx}}\) is the span enlarged by single-name
+carrier-surface coordinates, the carrier increment is
+\[
+        \Delta\widehat{\mathsf C}_{\mathrm{car}}
+        :=
+        \widehat{\mathsf C}(\mathsf H_{\mathrm{car}})
+        -
+        \widehat{\mathsf C}(\mathsf H_{\mathrm{idx}}).
+\]
+Proposition~\ref{prop:carrier-enrichment-shrinks} gives the population counterpart.  Enlarging the
+public span weakly reduces residual interval width.  In a date-indexed implementation, the carrier
+increment asks whether single-name public surfaces compress synchronized stress beyond the index
+surface alone.
+
+Residual hedge risk is the third object.  For a future or terminal stress claim \(Y\) and a
+visible public span \(\cS_m\), the finite visible hedge is the least-squares projection
+\(\widehat C_{\cS_m}Y\), and the observable residual floor is
+\[
+        \widehat{\mathsf F}(Y;\cS_m)
+        :=
+        \frac{\sum_{d\in\cD}(Y_d-\widehat C_{\cS_m}Y_d)^2}
+             {\sum_{d\in\cD}(Y_d-\overline Y)^2}.
+\]
+Again the ratio is defined only when the denominator is strictly positive.  Tail versions replace
+the squared loss by an upper-tail or spectral risk functional.  These quantities correspond to the
+visible-hedging lower bounds in Section~\ref{sec:hedging} and the capital functionals in
+Section~\ref{sec:risk}.
+
+The synchronized-stress wedge is the fourth object.  Given public total-variance coordinates
+\(v_{I,d,\tau}\) for an index and \(v_{i,d,\tau}\) for single-name carriers,
+Definition~\ref{def:implied-sync-coordinate} gives
+\[
+        \rho_{\mathrm{sync},d,\tau}^{\mathrm{imp}}
+        =
+        \frac{
+        v_{I,d,\tau}-\sum_i\omega_i^2v_{i,d,\tau}
+        }{
+        2\sum_{i<j}\omega_i\omega_j(v_{i,d,\tau}v_{j,d,\tau})^{1/2}
+        }.
+\]
+If \(\widehat\rho_{\mathrm{sync},d,\tau}^{\mathrm{real}}\) is a realized synchronization proxy
+available at date \(d\), the observable pricing wedge is
+\[
+        \rho_{\mathrm{sync},d,\tau}^{\mathrm{imp}}
+        -
+        \widehat\rho_{\mathrm{sync},d,\tau}^{\mathrm{real}}.
+\]
+This wedge is an observable coordinate induced by the synchronized-stress claim of
+Definition~\ref{def:synchronized-stress-claim}.  Execution, liquidity, carrier absorption, and
+information-timing controls are required before it becomes an executable pricing or portfolio rule.
+
+A listed-option synchronization implementation can turn this coordinate into the candidate source
+for a finite public trading rule.  Such an implementation adds contract-level execution, carrier
+admissibility, liquidity filters, lower-bound sellability, and adaptedness audits to the estimands
+defined here.  The two objects live in different quotients.  The Hilbert geometry identifies the
+residual-risk objects.  A trading implementation tests whether the public listed-option span makes
+those objects executable.
+
+The estimands separate the public-surface span, the carrier-enrichment increment, the residual
+hedge-risk floor, and the wedge between priced index synchronization and realized carrier
+synchronization.  The pricing and hedging geometry stops at this finite observable layer.  Numerical
+answers belong to a data or trading implementation.
+
+\section{Scope and extensions}\label{sec:scope}
+
+The theory is stated in \(L^2\), so pricing, hedging, and residual risk share one projection
+geometry.  The appendices record extensions needed at implementation boundaries.
+Appendix~\ref{app:dynamic} replaces static terminal hedge spaces by stochastic-integral hedge
+spaces.  Appendix~\ref{app:vector-perron} treats a low-dimensional Perron stress state.  Appendix
+\ref{app:robust} gives density-band and entropic public-equivalent pricing sets beyond local
+linear tilts.  Appendix~\ref{app:spectral} extends the capital functional from expected shortfall
+to spectral risk measures.  Appendix~\ref{app:bidask} incorporates bid-ask and liquidity
+constraints into the public calibration system.
+
+These extensions preserve the projection order.  Public calibration, latent stress pricing,
+visible hedging, and residual capital are distinct projections of one incomplete-information
+problem.  They also mark the boundary of the analysis.  The synchronized-stress and
+carrier-enrichment results identify the residual pricing object and the public spans that compress
+it.  Executable listed-option strategies, contract-level portfolio optimizers, and full
+risk-neutral dynamics for the latent Perron state belong to separate implementation or modeling
+modules.
+
+\section{Conclusion}\label{sec:conclusion}
+
+Public option surfaces were the starting object.  They calibrate admitted payoff prices, but they
+do not determine every latent stress claim consistent with those prices.  The paper formalizes that
+failure as a residual pricing fiber.  The latent Perron loading is projected onto public
+information; the component outside the projection remains available to public-equivalent pricing
+kernels.
+
+The core object is the Hilbert projection chain.  Public-equivalent kernels preserve public option
+prices while moving latent-stress claims.  Public prices therefore identify compressed priced
+loadings, not full latent loadings.  Visible hedging is a different projection onto the tradeable
+public span.  Its residual inherits a lower bound from the latent Perron component whenever that
+component remains outside the span.  Under an equivalent physical measure, the same residual becomes
+hedge risk and capital.
+
+The finite layer audits the obstruction rather than removing it.  Public projection shares,
+carrier-enrichment increments, residual hedge-risk floors, and implied-versus-realized
+synchronization wedges ask whether the public surface spans the stress component, whether carrier
+surfaces add public information, and whether a visible hedge leaves a residual.  They are pricing
+and hedging estimands.  Contract-level execution is a separate implementation module.
+
+A compression-consistent pricing model must therefore do more than fit the surface.  It must state
+which quotient the surface identifies, which synchronized-stress component lies outside the carrier
+span, and which latent stress risk survives public projection.
+
+\appendix
+
+\section{Dynamic visible hedge spaces}\label{app:dynamic}
+
+The main text uses a closed terminal subspace \(\cS\subseteq L^2(\QQ,\cH)\).  The dynamic version
+replaces it by the terminal closed span of public stochastic integrals.  The projection geometry is
+unchanged.  The martingale arguments use standard conditional-expectation facts; see, for example,
+\cite{williams1991}.
+
+\begin{definition}[Dynamic public hedge space]\label{def:dynamic-hedge-space}
+Let \((\cF_t)_{0\le t\le T}\) be a filtration under \(\QQ\), and let
+\[
+        S=(S^1,\ldots,S^d)
+\]
+be a discounted \(d\)-dimensional square-integrable \(\QQ\)-martingale adapted to the public
+filtration.  Let \(\cI_T(S)\) be the \(L^2(\QQ)\)-closure of terminal stochastic integrals
+\[
+        \int_0^T \vartheta_t\,\dd S_t
+\]
+over bounded predictable simple strategies \(\vartheta\).  The dynamic visible hedge space is
+\[
+        \cS_{\mathrm{dyn}}
+        :=
+        \R+\cI_T(S).
+\]
+\end{definition}
+
+\begin{assumption}[Public dynamic spanning]\label{ass:dynamic-public}
+The terminal gains in \(\cS_{\mathrm{dyn}}\) are \(\cH\)-measurable, so
+\[
+        \cS_{\mathrm{dyn}}\subseteq L^2(\QQ,\cH).
+\]
+\end{assumption}
+
+Dynamic-safe public-terminal kernels preserve public martingales.
+
+\begin{theorem}[Dynamic public martingale preservation]\label{thm:dynamic-martingale-preservation}
+Let \(S\) be a discounted square-integrable \(\QQ\)-martingale adapted to a public filtration
+\((\cG_t)_{0\le t\le T}\).  Let \(Z>0\) satisfy \(\EE_\QQ[Z]=1\) and
+\[
+        \EE_\QQ[Z\mid\cG_T]=1.
+\]
+If \(\dd\QQ^Z=Z\,\dd\QQ\), then \(S\) is also a \(\QQ^Z\)-martingale with respect to
+\((\cG_t)_{0\le t\le T}\).
+\end{theorem}
+
+\begin{proof}
+The variable \(S_t\) is \(\QQ^Z\)-integrable because \(S_t\) is \(\cG_T\)-measurable and
+\[
+        \EE_{\QQ^Z}[|S_t|]
+        =
+        \EE_\QQ[Z|S_t|]
+        =
+        \EE_\QQ[\EE_\QQ[Z\mid\cG_T]|S_t|]
+        =
+        \EE_\QQ[|S_t|]<\infty.
+\]
+For \(s\le t\le T\), Bayes' formula gives
+\[
+        \EE_{\QQ^Z}[S_t\mid\cG_s]
+        =
+        \frac{\EE_\QQ[ZS_t\mid\cG_s]}{\EE_\QQ[Z\mid\cG_s]}.
+\]
+The denominator is strictly positive a.s.  The assumption and the tower property imply
+\(\EE_\QQ[Z\mid\cG_u]=1\) for every \(u\le T\).
+Therefore
+\[
+        \EE_\QQ[ZS_t\mid\cG_s]
+        =
+        \EE_\QQ[\EE_\QQ[Z\mid\cG_t]S_t\mid\cG_s]
+        =
+        \EE_\QQ[S_t\mid\cG_s]
+        =
+        S_s,
+\]
+and \(\EE_\QQ[Z\mid\cG_s]=1\).  Hence
+\(\EE_{\QQ^Z}[S_t\mid\cG_s]=S_s\).
+\end{proof}
+
+The dynamic hedge space reduces the terminal problem to the same projection.
+
+\begin{theorem}[Dynamic projection hedge]\label{thm:dynamic-projection-hedge}
+Under Assumption~\ref{ass:dynamic-public}, \(\cS_{\mathrm{dyn}}\) is a closed linear subspace of
+\(L^2(\QQ,\cH)\) containing constants.  For every \(X\in L^2(\QQ)\), the optimal dynamic visible
+hedge is
+\[
+        H_{X,\mathrm{dyn}}^\star
+        =
+        C_{\cS_{\mathrm{dyn}}}^{\QQ}X,
+\]
+and
+\[
+        \norm{X-H_{X,\mathrm{dyn}}^\star}_{2,\QQ}^2
+        =
+        \norm{X-L_X^\QQ}_{2,\QQ}^2
+        +
+        \norm{L_X^\QQ-C_{\cH}^{\QQ}L_X^\QQ}_{2,\QQ}^2
+        +
+        \norm{C_{\cH}^{\QQ}L_X^\QQ-C_{\cS_{\mathrm{dyn}}}^{\QQ}L_X^\QQ}_{2,\QQ}^2.
+\]
+\end{theorem}
+
+\begin{proof}
+By definition, \(\cI_T(S)\) is closed in \(L^2(\QQ)\), and adding constants preserves closedness.
+Assumption~\ref{ass:dynamic-public} places \(\cS_{\mathrm{dyn}}\) inside \(L^2(\QQ,\cH)\).  The
+projection theorem gives the unique minimizer \(C_{\cS_{\mathrm{dyn}}}^{\QQ}X\).  Applying
+Theorem~\ref{thm:three-part-hedge} with \(\cS=\cS_{\mathrm{dyn}}\) gives the displayed
+decomposition.
+\end{proof}
+
+Dynamic trading removes only the Perron component contained in the stochastic-integral span.
+
+\begin{corollary}[Dynamic Perron residual lower bound]\label{cor:dynamic-perron-bound}
+Let \(Z\in L^2(\QQ,\cK)\) be centered, and assume
+\[
+        Z_{\mathrm{dyn}}^\perp
+        :=
+        Z-C_{\cS_{\mathrm{dyn}}}^{\QQ}Z
+        \ne0.
+\]
+Define
+\[
+        \beta_{\mathrm{dyn}}(X;Z)
+        :=
+        \frac{\ip{X-C_{\cS_{\mathrm{dyn}}}^{\QQ}X}{Z_{\mathrm{dyn}}^\perp}_{L^2(\QQ)}}
+        {\norm{Z_{\mathrm{dyn}}^\perp}_{2,\QQ}^{2}}.
+\]
+Then
+\[
+        \inf_{H\in\cS_{\mathrm{dyn}}}\norm{X-H}_{2,\QQ}^{2}
+        \ge
+        \beta_{\mathrm{dyn}}(X;Z)^2
+        \norm{Z_{\mathrm{dyn}}^\perp}_{2,\QQ}^{2}.
+\]
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{thm:perron-lower-bound} with \(\cS=\cS_{\mathrm{dyn}}\).
+\end{proof}
+
+\section{Low-dimensional Perron stress states}\label{app:vector-perron}
+
+The scalar Perron coordinate is the baseline case.  Applications may retain a small Perron block
+rather than a single residual direction.  The projection geometry extends by replacing one residual
+coordinate with a finite-dimensional residual factor space.
+
+\begin{definition}[Vector Perron stress coordinate]\label{def:vector-perron}
+Let
+\[
+        Z=(Z_1,\ldots,Z_r)^\top
+        \in L^2(\QQ,\cK;\R^r)
+\]
+be centered componentwise.  Define its visible residual vector by
+\[
+        Z_{\cS}^{\perp}
+        :=
+        Z-C_{\cS}^{\QQ}Z,
+\]
+where the projection is applied componentwise.  Its residual Gram matrix is
+\[
+        G_{\cS}(Z)
+        :=
+        \EE_\QQ[Z_{\cS}^{\perp}(Z_{\cS}^{\perp})^\top].
+\]
+\end{definition}
+
+\begin{assumption}[Nondegenerate residual Perron block]\label{ass:vector-perron-nondegenerate}
+The matrix \(G_{\cS}(Z)\) is positive definite.
+\end{assumption}
+
+\begin{definition}[Vector residual Perron coefficient]\label{def:vector-perron-beta}
+Under Assumption~\ref{ass:vector-perron-nondegenerate}, define
+\[
+        \beta_{\cS}^{(r)}(X;Z)
+        :=
+        G_{\cS}(Z)^{-1}
+        \EE_\QQ[Z_{\cS}^{\perp}(X-C_{\cS}^{\QQ}X)].
+\]
+\end{definition}
+
+A nonzero vector exposure imposes a residual floor in the Perron block.
+
+\begin{theorem}[Vector Perron residual lower bound]\label{thm:vector-perron-bound}
+Under Assumption~\ref{ass:vector-perron-nondegenerate},
+\[
+        \inf_{H\in\cS}\norm{X-H}_{2,\QQ}^{2}
+        \ge
+        \bigl(\beta_{\cS}^{(r)}(X;Z)\bigr)^\top
+        G_{\cS}(Z)
+        \beta_{\cS}^{(r)}(X;Z).
+\]
+If
+\[
+        L_X^\QQ=Y_X+b_X^\top Z+B_X,\qquad Y_X\in\cS,
+\]
+and
+\[
+        \EE_\QQ[Z_{\cS}^{\perp}(B_X-C_{\cS}^{\QQ}B_X)]=0,
+\]
+then \(\beta_{\cS}^{(r)}(X;Z)=b_X\) and
+\[
+        \inf_{H\in\cS}\norm{X-H}_{2,\QQ}^{2}
+        \ge
+        b_X^\top G_{\cS}(Z)b_X.
+\]
+\end{theorem}
+
+\begin{proof}
+Let \(R_X=X-C_{\cS}^{\QQ}X\).  The projection of \(R_X\) onto the finite-dimensional span of
+\(\{Z_1^{\perp},\ldots,Z_r^{\perp}\}\) has coefficient vector
+\(\beta_{\cS}^{(r)}(X;Z)\), because the normal equations are
+\[
+        G_{\cS}(Z)\beta
+        =
+        \EE_\QQ[Z_{\cS}^{\perp}R_X].
+\]
+The squared norm of this finite-dimensional projection is
+\[
+        \bigl(\beta_{\cS}^{(r)}(X;Z)\bigr)^\top G_{\cS}(Z)\beta_{\cS}^{(r)}(X;Z).
+\]
+Since the squared norm of \(R_X\) dominates the squared norm of any orthogonal projection, the first
+inequality follows.
+
+For the pure vector loading statement, \(Z_{\cS}^{\perp}\) is \(\cK\)-measurable and orthogonal to
+\(\cS\), so
+\[
+        \EE_\QQ[Z_{\cS}^{\perp}R_X]
+        =
+        \EE_\QQ[Z_{\cS}^{\perp}(L_X^\QQ-C_{\cS}^{\QQ}L_X^\QQ)].
+\]
+The \(Y_X\) term contributes zero because \(Y_X\in\cS\).  The \(B_X\) term contributes zero by
+assumption.  For the Perron block, linearity of \(C_{\cS}^{\QQ}\) gives
+\(C_{\cS}^{\QQ}(b_X^\top Z)=b_X^\top C_{\cS}^{\QQ}Z\), so the residual is
+\(b_X^\top Z_{\cS}^{\perp}\) and its moment with \(Z_{\cS}^{\perp}\) is
+\(G_{\cS}(Z)b_X\).  Hence \(\beta_{\cS}^{(r)}(X;Z)=b_X\).
+\end{proof}
+
+Whitened vector budgets produce coordinate-free Perron intervals.
+
+\begin{corollary}[Vector Perron ellipsoidal interval]\label{cor:vector-perron-interval}
+Assume \(Z_{\cH}^{\perp}:=Z-C_{\cH}^{\QQ}Z\) is componentwise bounded and has positive definite
+Gram matrix
+\[
+        G_{\cH}(Z):=\EE_\QQ[Z_{\cH}^{\perp}(Z_{\cH}^{\perp})^\top].
+\]
+Suppose
+\[
+        L_X^\QQ=Y_X+b_X^\top Z+B_X,\qquad Y_X\in L^2(\QQ,\cH),
+\]
+and
+\[
+        \EE_\QQ[Z_{\cH}^{\perp}(B_X-C_{\cH}^{\QQ}B_X)]=0.
+\]
+Let \(A\) and \(\rho\) satisfy the bounded-positivity condition in
+Definition~\ref{def:ellipsoidal-residual-set} for \(R=Z_{\cH}^{\perp}\).  Then the ellipsoidal
+residual set generated by \(R=Z_{\cH}^{\perp}\) gives
+\[
+        \Pi^+_{A,\rho}(X)-\Pi^-_{A,\rho}(X)
+        =
+        2\rho\,
+        \bigl(b_X^\top G_{\cH}(Z)A^{-1}G_{\cH}(Z)b_X\bigr)^{1/2}.
+\]
+\end{corollary}
+
+\begin{proof}
+In Theorem~\ref{thm:robust-residual-interval}, the residual moment vector has entries
+\[
+        \EE_\QQ[XZ_{i,\cH}^{\perp}]
+        =
+        \EE_\QQ[L_X^\QQ Z_{i,\cH}^{\perp}],
+\]
+because \(Z_{i,\cH}^{\perp}\) is \(\cK\)-measurable.  The public term \(Y_X\) is orthogonal to
+\(Z_{i,\cH}^{\perp}\), the \(B_X\) term is removed by the stated orthogonality condition, and
+the block term contributes \( (G_{\cH}(Z)b_X)_i\).  Thus the moment vector is
+\(G_{\cH}(Z)b_X\).  Substitution into the interval width formula of
+Theorem~\ref{thm:robust-residual-interval} gives the result.
+\end{proof}
+
+\section{Alternative public-equivalent pricing sets}\label{app:robust}
+
+The main text uses local linear residual tilts as tangent objects and conditional exponential
+kernels as the positive Gaussian residual family.  Density bands and entropy penalties give
+alternative public-equivalent pricing sets that preserve public option prices.
+
+\begin{definition}[Density-band public-equivalent set]\label{def:density-band}
+For constants \(0<a<1<b<\infty\), define
+\[
+        \cZ_{\cH}^{[a,b]}
+        :=
+        \{Z\in L^\infty(\QQ):a\le Z\le b,\ \EE_\QQ[Z\mid\cH]=1\}.
+\]
+The associated pricing measures are \(\dd\QQ^Z/\dd\QQ=Z\).
+\end{definition}
+
+Density bands convert residual pricing freedom into an order interval.
+
+\begin{proposition}[Density-band residual interval]\label{prop:density-band-interval}
+For \(X\in L^1(\QQ)\), the set
+\[
+        \{\EE_\QQ[ZX]:Z\in\cZ_{\cH}^{[a,b]}\}
+\]
+is a bounded interval whenever \(\cZ_{\cH}^{[a,b]}\) is nonempty and closed under convex
+combinations.  Every \(Z\in\cZ_{\cH}^{[a,b]}\) preserves bounded public payoff prices.
+\end{proposition}
+
+\begin{proof}
+Public payoff preservation follows from
+\[
+        \EE_\QQ[ZY]
+        =
+        \EE_\QQ[\EE_\QQ[Z\mid\cH]Y]
+        =
+        \EE_\QQ[Y]
+\]
+for bounded \(\cH\)-measurable \(Y\).  The map \(Z\mapsto \EE_\QQ[ZX]\) is linear, and
+\(\cZ_{\cH}^{[a,b]}\) is convex.  Therefore the image is a convex subset of \(\R\), hence an
+interval.  It is bounded because
+\[
+        |\EE_\QQ[ZX]|\le b\,\EE_\QQ[|X|].
+\]
+\end{proof}
+
+\begin{definition}[Conditional upper-tail support]\label{def:conditional-upper-tail-support}
+Let \(U\in L^1(\QQ)\), let \(p\in(0,1)\), and let \(\cH\subseteq\cF\).  Define
+\[
+        T_p(U\mid\cH)
+        :=
+        \esssup\left\{
+        \EE_\QQ[U\xi\mid\cH]:
+        0\le\xi\le1,\ 
+        \EE_\QQ[\xi\mid\cH]=p
+        \right\}.
+\]
+\end{definition}
+
+The exact density-band support reallocates residual mass across conditional tails.
+
+\begin{theorem}[Exact density-band residual support]\label{thm:density-band-exact-support}
+Let \(0<a<1<b<\infty\), and set
+\[
+        p:=\frac{1-a}{b-a}.
+\]
+Let \(X\in L^1(\QQ)\), and write
+\[
+        U:=X-C_{\cH}^{\QQ}X.
+\]
+Then
+\[
+\begin{aligned}
+        \sup_{\substack{a\le Z\le b\\ \EE_\QQ[Z\mid\cH]=1}}
+        \EE_\QQ[ZX]
+        &=
+        \EE_\QQ[X]
+        +(b-a)\EE_\QQ[T_p(U\mid\cH)],\\
+        \inf_{\substack{a\le Z\le b\\ \EE_\QQ[Z\mid\cH]=1}}
+        \EE_\QQ[ZX]
+        &=
+        \EE_\QQ[X]
+        -(b-a)\EE_\QQ[T_p(-U\mid\cH)].
+\end{aligned}
+\]
+If the density set is restricted to \(\cK\)-measurable densities, replace \(U\) by
+\[
+        C_{\cK}^{\QQ}X-C_{\cH}^{\QQ}C_{\cK}^{\QQ}X
+\]
+and take the essential supremum over \(\cK\)-measurable \(\xi\).
+\end{theorem}
+
+\begin{proof}
+The feasible set is nonempty because \(\xi\equiv p\) corresponds to \(Z\equiv1\).  For any
+feasible \(Z\), define
+\[
+        \xi:=\frac{Z-a}{b-a}.
+\]
+Then \(0\le\xi\le1\), and
+\[
+        \EE_\QQ[\xi\mid\cH]
+        =
+        \frac{1-a}{b-a}
+        =p.
+\]
+Since \(\EE_\QQ[U\mid\cH]=0\),
+\[
+        \EE_\QQ[ZU]
+        =
+        a\EE_\QQ[U]+(b-a)\EE_\QQ[\xi U]
+        =
+        (b-a)\EE_\QQ[\xi U].
+\]
+The affine change of variables therefore converts the supremum over feasible \(Z\) into the
+supremum over feasible \(\xi\).  It is reversible, so no admissible density is lost.  The
+feasible family is stable under \(\cH\)-measurable pasting: if \(\xi_1,\xi_2\) are feasible and
+\(A\in\cH\), then
+\[
+        \xi=\one_A\xi_1+\one_{A^c}\xi_2
+\]
+is feasible.  Hence the conditional values \(\EE_\QQ[U\xi\mid\cH]\) are upward directed, and
+the lattice argument for essential suprema gives a sequence of feasible \(\xi_n\) such that
+\[
+        \EE_\QQ[U\xi_n\mid\cH]\uparrow T_p(U\mid\cH)
+        \quad\text{a.s.}
+\]
+Since \(|\EE_\QQ[U\xi_n\mid\cH]|\le \EE_\QQ[|U|\mid\cH]\), dominated convergence gives
+\[
+        \sup_{\xi}\EE_\QQ[U\xi]
+        =
+        \EE_\QQ[T_p(U\mid\cH)].
+\]
+This gives the first display.  Replacing \(U\) by \(-U\) gives the infimum.
+If densities are required to be \(\cK\)-measurable, then
+\(\EE_\QQ[ZX]=\EE_\QQ[ZC_{\cK}^{\QQ}X]\).  The same calculation applies to the residual
+\(C_{\cK}^{\QQ}X-C_{\cH}^{\QQ}C_{\cK}^{\QQ}X\), with the optimizer \(\xi\) restricted to be
+\(\cK\)-measurable.
+\end{proof}
+
+\begin{definition}[Entropy-penalized public-equivalent price]\label{def:entropy-penalty}
+For bounded \(X\in L^\infty(\QQ)\) and \(\lambda>0\), define
+\[
+        \Pi_{\lambda}^{\mathrm{ent}}(X)
+        :=
+        \sup_{\substack{Z>0\\ \EE_\QQ[Z\mid\cH]=1}}
+        \left\{
+        \EE_\QQ[ZX]
+        -
+        \lambda\,\EE_\QQ[Z\log Z]
+        \right\}.
+\]
+\end{definition}
+
+Entropy penalization gives a monotone conditional selector on the public-equivalent fiber.
+
+\begin{theorem}[Conditional entropic residual price]\label{thm:conditional-entropic}
+For \(X\in L^\infty(\QQ)\) and \(\lambda>0\),
+\[
+        \Pi_{\lambda}^{\mathrm{ent}}(X)
+        =
+        \EE_\QQ\!\left[
+        \lambda\log \EE_\QQ\!\left[\exp(X/\lambda)\mid\cH\right]
+        \right].
+\]
+The optimizer is
+\[
+        Z_\lambda^X
+        =
+        \frac{\exp(X/\lambda)}
+        {\EE_\QQ[\exp(X/\lambda)\mid\cH]}.
+\]
+Equivalently, with \(\Delta_{\cH}X=X-C_{\cH}^{\QQ}X\),
+\[
+        Z_\lambda^X
+        =
+        \frac{\exp(\Delta_{\cH}X/\lambda)}
+        {\EE_\QQ[\exp(\Delta_{\cH}X/\lambda)\mid\cH]}.
+\]
+\end{theorem}
+
+\begin{proof}
+The displayed \(Z_\lambda^X\) is positive and satisfies
+\(\EE_\QQ[Z_\lambda^X\mid\cH]=1\).  For any admissible \(Z\), conditional Gibbs' inequality,
+with the value understood in the extended sense when \(\EE_\QQ[Z\log Z]=+\infty\), gives
+\[
+        \EE_\QQ\!\left[
+        Z\frac{X}{\lambda}-Z\log Z
+        \,\middle|\,\cH
+        \right]
+        \le
+        \log \EE_\QQ[\exp(X/\lambda)\mid\cH].
+\]
+Multiplying by \(\lambda\) and taking expectations gives the upper bound.  Equality holds when
+\[
+        Z=
+        \frac{\exp(X/\lambda)}
+        {\EE_\QQ[\exp(X/\lambda)\mid\cH]},
+\]
+which proves the value and optimizer.  The final formula follows because
+\[
+        \exp(X/\lambda)
+        =
+        \exp(C_{\cH}^{\QQ}X/\lambda)\exp(\Delta_{\cH}X/\lambda),
+\]
+and the \(\cH\)-measurable factor cancels between numerator and conditional denominator.
+\end{proof}
+
+The large-penalty limit recovers a variance residual premium.
+
+\begin{corollary}[Large-penalty entropic expansion]\label{cor:entropic-expansion}
+Let \(X\in L^\infty(\QQ)\), set
+\[
+        \Delta_{\cH}X=X-C_{\cH}^{\QQ}X,
+        \qquad
+        M_X=\norm{\Delta_{\cH}X}_\infty.
+\]
+Then
+\[
+        \Pi_{\lambda}^{\mathrm{ent}}(X)
+        =
+        \EE_\QQ[X]
+        +
+        \frac{1}{2\lambda}\,
+        \EE_\QQ[\Var_\QQ(X\mid\cH)]
+        +
+        O\!\left(\frac{M_X^3}{\lambda^2}\right)
+        \qquad \lambda\to\infty.
+\]
+In particular, the entropic residual premium is nonnegative and vanishes for every
+\(\cH\)-measurable \(X\).
+\end{corollary}
+
+\begin{proof}
+The value formula in Theorem~\ref{thm:conditional-entropic} gives
+\[
+        \Pi_{\lambda}^{\mathrm{ent}}(X)
+        =
+        \EE_\QQ[C_{\cH}^{\QQ}X]
+        +
+        \EE_\QQ\!\left[
+        \lambda\log \EE_\QQ[\exp(\Delta_{\cH}X/\lambda)\mid\cH]
+        \right].
+\]
+Since \(\EE_\QQ[\Delta_{\cH}X\mid\cH]=0\) and \(|\Delta_{\cH}X|\le M_X\), Taylor's formula with a
+uniform remainder gives
+\[
+        \EE_\QQ[\exp(\Delta_{\cH}X/\lambda)\mid\cH]
+        =
+        1+
+        \frac{1}{2\lambda^2}\EE_\QQ[(\Delta_{\cH}X)^2\mid\cH]
+        +
+        O\!\left(\frac{M_X^3}{\lambda^3}\right),
+\]
+uniformly for large \(\lambda\).  The inside of the logarithm is then bounded away from zero, and
+\(\log(1+u)=u+O(u^2)\) gives, after multiplying by \(\lambda\),
+\[
+        \lambda\log \EE_\QQ[\exp(\Delta_{\cH}X/\lambda)\mid\cH]
+        =
+        \frac{1}{2\lambda}\EE_\QQ[(\Delta_{\cH}X)^2\mid\cH]
+        +
+        O\!\left(\frac{M_X^3}{\lambda^2}\right),
+\]
+again uniformly for large \(\lambda\).  Taking expectations proves the expansion because
+\(\EE_\QQ[(\Delta_{\cH}X)^2\mid\cH]=\Var_\QQ(X\mid\cH)\).  Nonnegativity follows from conditional
+Jensen applied to the logarithmic moment generating function; if \(X\) is \(\cH\)-measurable, then
+\(\Delta_{\cH}X=0\) and the premium term is zero.
+\end{proof}
+
+\section{Spectral capital functionals}\label{app:spectral}
+
+Expected shortfall is one admissible physical capital input.  Spectral risk measures average
+expected shortfall levels and leave the projection results unchanged.
+
+\begin{definition}[Admissible spectrum]\label{def:admissible-spectrum}
+A function \(\varphi:(0,1)\to[0,\infty)\) is an admissible \(L^2\)-spectrum if
+\[
+        \int_0^1\varphi(\alpha)\,\dd\alpha=1,
+        \qquad
+        \int_0^1\frac{\varphi(\alpha)}{\sqrt{1-\alpha}}\,\dd\alpha<\infty.
+\]
+For \(Y\in L^2(\PP)\), define
+\[
+        \rho_{\varphi}^{\PP}(Y)
+        :=
+        \int_0^1 \ES_\alpha^\PP(Y)\varphi(\alpha)\,\dd\alpha.
+\]
+\end{definition}
+
+The spectral extension needs only an \(L^2\) bound for expected shortfall.
+
+\begin{lemma}[Expected shortfall \(L^2\) bound]\label{lem:es-l2-bound}
+For \(Y\in L^2(\PP)\),
+\[
+        \ES_\alpha^\PP(Y)
+        \le
+        \EE_\PP[Y]
+        +
+        \frac{\norm{Y-\EE_\PP[Y]}_{2,\PP}}{\sqrt{1-\alpha}},
+        \qquad \alpha\in(0,1).
+\]
+If \(\EE_\PP[Y]=0\), then
+\[
+        0\le\ES_\alpha^\PP(Y)
+        \le
+        \frac{\norm{Y}_{2,\PP}}{\sqrt{1-\alpha}}.
+\]
+\end{lemma}
+
+\begin{proof}
+By cash additivity, it is enough to treat centered \(Y\).  For centered \(Y\), take \(r=0\) in
+Definition~\ref{def:expected-shortfall} to get finiteness from above.  For the stated bound, use,
+for \(r>0\),
+\[
+        (Y-r)_+=(Y_+-r)_+\le \frac{Y_+^2}{4r}.
+\]
+This gives
+\[
+        \ES_\alpha^\PP(Y)
+        \le
+        r+\frac{\EE_\PP[Y_+^2]}{4r(1-\alpha)}.
+\]
+Optimizing over \(r>0\) gives
+\[
+        \ES_\alpha^\PP(Y)
+        \le
+        \frac{\norm{Y_+}_{2,\PP}}{\sqrt{1-\alpha}}
+        \le
+        \frac{\norm{Y}_{2,\PP}}{\sqrt{1-\alpha}}.
+\]
+The lower bound for centered \(Y\) follows from Proposition~\ref{prop:es-capital-input}.  Restoring
+the mean gives the displayed inequality for general \(Y\).
+\end{proof}
+
+Admissible spectra preserve the capital properties required by the projection bounds.
+
+\begin{proposition}[Spectral capital is admissible]\label{prop:spectral-admissible}
+If \(\varphi\) is an admissible \(L^2\)-spectrum, then
+\(\rho_{\varphi}^{\PP}\) is finite on \(L^2(\PP)\), convex, cash additive, and satisfies
+\[
+        \rho_\varphi^\PP(Y)\ge0
+        \quad\text{whenever}\quad
+        \EE_\PP[Y]=0.
+\]
+Consequently \(\rho_\varphi^\PP\) can be used as \(\rho_\PP\) in
+Definition~\ref{def:capital}, Proposition~\ref{prop:capital-convex}, and
+Theorem~\ref{thm:capital-lower-bound}.
+\end{proposition}
+
+\begin{proof}
+Finiteness follows from Lemma~\ref{lem:es-l2-bound} and the defining integrability condition on
+\(\varphi\).  Convexity and cash additivity follow by integrating the corresponding properties of
+\(\ES_\alpha^\PP\) from Proposition~\ref{prop:es-capital-input}.  The nonnegativity on centered
+losses follows in the same way from \(\ES_\alpha^\PP(Y)\ge0\) when \(\EE_\PP[Y]=0\).
+\end{proof}
+
+\section{Bid-ask and liquidity-constrained calibration}\label{app:bidask}
+
+Observed option data contain bid-ask spreads, quote-density variation, and liquidity differences
+across maturity and moneyness.  These constraints enter the public calibration system as finite
+feasibility restrictions.
+
+\begin{definition}[Bid-ask public calibration system]\label{def:bidask-system}
+Let \(Y_1,\ldots,Y_m\in L^\infty(\QQ,\cH)\) be public payoff coordinates, and let
+\[
+        \underline p_i\le \overline p_i,
+        \qquad i=1,\ldots,m,
+\]
+be discounted bid and ask price bounds.  A density \(Z\) is bid-ask feasible if
+\[
+        Z>0,\qquad
+        \EE_\QQ[Z]=1,
+        \qquad
+        \underline p_i\le \EE_\QQ[ZY_i]\le\overline p_i,
+        \quad i=1,\ldots,m.
+\]
+\end{definition}
+
+Bid-ask constraints turn finite residual calibration into a compact convex feasibility problem.
+
+\begin{proposition}[Finite residual calibration with bid-ask bounds]\label{prop:bidask-polytope}
+Let \(R_1,\ldots,R_d\in L^\infty(\QQ)\), and define
+\[
+        Z_\vartheta=1+\vartheta^\top R.
+\]
+Assume a compact convex set \(K\subset\R^d\) satisfies \(Z_\vartheta>0\) for every
+\(\vartheta\in K\).  The feasible parameter set
+\[
+        K_{\mathrm{ba}}
+        :=
+        \left\{
+        \vartheta\in K:
+        \EE_\QQ[Z_\vartheta]=1,\ 
+        \underline p_i\le \EE_\QQ[Z_\vartheta Y_i]\le\overline p_i,\quad i=1,\ldots,m
+        \right\}
+\]
+is compact and convex.  For every \(X\in L^1(\QQ)\), the bid-ask residual price bounds
+\[
+        \inf_{\vartheta\in K_{\mathrm{ba}}}\EE_\QQ[Z_\vartheta X],
+        \qquad
+        \sup_{\vartheta\in K_{\mathrm{ba}}}\EE_\QQ[Z_\vartheta X]
+\]
+are attained whenever \(K_{\mathrm{ba}}\ne\varnothing\).
+\end{proposition}
+
+\begin{proof}
+The normalization condition is affine because
+\[
+        \EE_\QQ[Z_\vartheta]
+        =
+        1+\vartheta^\top\EE_\QQ[R].
+\]
+For each \(i\),
+\[
+        \EE_\QQ[Z_\vartheta Y_i]
+        =
+        \EE_\QQ[Y_i]+\vartheta^\top \EE_\QQ[RY_i],
+\]
+so each bid-ask constraint is a closed affine half-space condition in \(\vartheta\).  Intersecting
+the normalization hyperplane and finitely many bid-ask half-spaces with compact convex \(K\) gives
+compact convex
+\(K_{\mathrm{ba}}\).  The objective
+\[
+        \vartheta\mapsto \EE_\QQ[Z_\vartheta X]
+        =
+        \EE_\QQ[X]+\vartheta^\top\EE_\QQ[RX]
+\]
+is continuous and affine.  A continuous function attains its infimum and supremum on a nonempty
+compact set.
+\end{proof}
+
+\begin{definition}[Liquidity-weighted calibration objective]\label{def:liquidity-objective}
+For observed public coordinates \(q\in\R^m\), model coordinates \(m(\theta)\), and positive
+liquidity weights \(w_i>0\), define
+\[
+        J_{\mathrm{liq}}(\theta)
+        :=
+        \sum_{i=1}^m w_i\bigl(q_i-m_i(\theta)\bigr)^2.
+\]
+If bid-ask bounds are present, the constrained calibration set is
+\[
+        \Theta_{\mathrm{ba}}
+        :=
+        \{\theta\in\Theta:\underline p_i\le m_i(\theta)\le\overline p_i,\ i=1,\ldots,m\}.
+\]
+\end{definition}
+
+Liquidity-weighted calibration has a minimizer once the feasible bid-ask set is compact.
+
+\begin{proposition}[Existence of liquidity-constrained public calibration]\label{prop:liquidity-existence}
+Let \(\Theta\) be compact, let \(m:\Theta\to\R^m\) be continuous, and let
+\(\Theta_{\mathrm{ba}}\) be nonempty.  Then \(J_{\mathrm{liq}}\) attains a minimum on
+\(\Theta_{\mathrm{ba}}\).
+\end{proposition}
+
+\begin{proof}
+The set \(\Theta_{\mathrm{ba}}\) is closed in \(\Theta\), because it is defined by finitely many
+closed inequalities involving continuous functions.  Hence it is compact.  The objective
+\(J_{\mathrm{liq}}\) is continuous, so Weierstrass' theorem gives a minimizer.
+\end{proof}
+
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\end{document}
